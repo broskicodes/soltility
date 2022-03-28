@@ -17,6 +17,8 @@ pub enum MarketplaceError {
     UnknownSeller,
     #[msg("Nft is not from the provided collection.")]
     InvalidCollection,
+    #[msg("Passed Creator AccountInfo is missing or incorrect.")]
+    BadCreatorInfo,
 }
 
 impl PrintProgramError for MarketplaceError {

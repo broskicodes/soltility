@@ -49,15 +49,17 @@ export const Landing: FC = () => {
   }
 
   const tester = async () => {
-    const mtdtAcnt = await Metadata.getPDA(new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA"));
-    const metadata = await Metadata.load(connection, mtdtAcnt);
+    // const mtdtAcnt = await Metadata.getPDA(new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA"));
+    // const metadata = await Metadata.load(connection, mtdtAcnt);
 
-    console.log(metadata);
+    // console.log(metadata);
 
-    const program = getProgram(provider);
-    const collection = await program.account.collection.fetch(await getCollectionPDA(new PublicKey("Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc")));
+    // const program = getProgram(provider);
+    // const collection = await program.account.collection.fetch(await getCollectionPDA(new PublicKey("Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc")));
 
-    console.log(collection);
+    // console.log(collection);
+
+    console.log((await connection.getParsedAccountInfo(publicKey as PublicKey)).value?.owner.toString());
   }
 
   const getCollections = useCallback(async () => {
@@ -78,6 +80,10 @@ export const Landing: FC = () => {
     });
   }, [getCollections]);
 
+  useEffect(() => {
+    setProvider(getProvider(connection, wallet as Wallet))
+  }, [wallet, connection]);
+
   return (
     <div>
       {publicKey && 
@@ -85,7 +91,7 @@ export const Landing: FC = () => {
           <div className="flex space-x-2">
             {/* <button onClick={initMarketplace}>Init Market</button> */}
             <button onClick={registerNewCollection}>New Collection</button>
-            {/* <button onClick={tester}>test</button> */}
+            <button onClick={tester}>test</button>
           </div>
           <div className="mt-4">
             Collections:

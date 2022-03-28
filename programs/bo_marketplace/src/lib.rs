@@ -56,6 +56,18 @@ pub mod bo_marketplace {
       escrow_nonce,
     )
   }
+
+  pub fn buy_nft<'a, 'b, 'c, 'info>(
+    ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
+    escrow_nonce: u8,
+    vault_nonce: u8,
+  ) -> ProgramResult {    
+    process_buy_nft::process_buy_nft(
+      ctx,
+      escrow_nonce,
+      vault_nonce,
+    )
+  }
 }
 
 

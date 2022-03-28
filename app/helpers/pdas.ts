@@ -12,6 +12,18 @@ export const getMarketplacePDA = async () => {
   return marketplace;
 }
 
+export const getMarketplaceVaultPDA = async (): Promise<[PublicKey, number]> => {
+  const [marketplace, bump] = await PublicKey.findProgramAddress(
+    [
+      Buffer.from("marketplace-vault"),
+      (await getMarketplacePDA()).toBuffer(),
+    ],
+    MARKETPLACE_PROGRAM_ADDRESS,
+  );
+
+  return [marketplace, bump];
+}
+
 export const getCollectionPDA = async (
   collectionId: PublicKey,
 ) => {
@@ -30,7 +42,7 @@ export const getCollectionPDA = async (
 export const getEscrowPDA = async (
   collectionId: PublicKey,
   mint: PublicKey,
-  user: PublicKey,
+  seller: PublicKey,
 ): Promise<[PublicKey, number]> => {
   const [escrow, bump] = await PublicKey.findProgramAddress(
     [
@@ -38,7 +50,7 @@ export const getEscrowPDA = async (
       (await getMarketplacePDA()).toBuffer(),
       (await getCollectionPDA(collectionId)).toBuffer(),
       mint.toBuffer(),
-      user.toBuffer()
+      seller.toBuffer()
     ],
     MARKETPLACE_PROGRAM_ADDRESS,
   );
@@ -49,7 +61,7 @@ export const getEscrowPDA = async (
 export const getEscrowTokenPDA = async (
   collectionId: PublicKey,
   mint: PublicKey,
-  user: PublicKey,
+  seller: PublicKey,
 ) => {
   const [escrow] = await PublicKey.findProgramAddress(
     [
@@ -57,7 +69,7 @@ export const getEscrowTokenPDA = async (
       (await getEscrowPDA(
         collectionId,
         mint,
-        user,
+        seller,
       ))[0].toBuffer(),
     ],
     MARKETPLACE_PROGRAM_ADDRESS,

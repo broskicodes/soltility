@@ -11,7 +11,7 @@ export const UserDashboard: FC = () => {
   const { connection } = useConnection();
   const { sendTransaction, publicKey } = useWallet();
   const wallet = useAnchorWallet();
-  const provider = getProvider(connection, wallet as Wallet);
+  const [provider, setProvider] = useState(getProvider(connection, wallet as Wallet));
   const [userNfts, setUserNfts] = useState<NftData[]>([]);
 
   const loadNfts = useCallback(async () => {
@@ -63,6 +63,10 @@ export const UserDashboard: FC = () => {
       });
     }
   }, [publicKey, loadNfts]);
+
+  useEffect(() => {
+    setProvider(getProvider(connection, wallet as Wallet))
+  }, [wallet, connection]);
 
   return (
     <div className="mt-4">

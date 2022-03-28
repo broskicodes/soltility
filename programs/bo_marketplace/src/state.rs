@@ -9,10 +9,21 @@ pub enum CandyMachineVersion {
   // Multiple,
 }
 
+#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
+pub enum MarketplaceType {
+  NFT,
+  Token,
+}
+
 #[account]
 pub struct Marketplace {
-  
+  // In percentage
+  pub m_type: MarketplaceType,
+  pub fee: u8,
 }
+
+#[account]
+pub struct MarketplaceVault {}
 
 #[account]
 pub struct Collection {
