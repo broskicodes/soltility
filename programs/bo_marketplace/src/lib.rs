@@ -2,6 +2,7 @@ pub mod context;
 pub mod processor;
 pub mod error;
 pub mod state;
+pub mod utils;
 
 use {
   anchor_lang::prelude::*,
@@ -70,12 +71,10 @@ pub mod bo_marketplace {
     ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
     _token_type: TokenType,
     escrow_nonce: u8,
-    vault_nonce: u8,
   ) -> Result<()> {    
     process_buy_nft::process_buy_nft(
       ctx,
       escrow_nonce,
-      vault_nonce,
     )
   }
 

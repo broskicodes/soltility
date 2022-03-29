@@ -12,7 +12,9 @@ use {
 };
 
 #[derive(Accounts)]
-#[instruction(token_type: TokenType)]
+#[instruction(
+  token_type: TokenType,
+)]
 pub struct InitializeMarketplace<'info> {
   #[account(
     init, payer = payer, space = 8+1+32+1+1,
@@ -23,6 +25,16 @@ pub struct InitializeMarketplace<'info> {
     bump,
   )]
   pub marketplace: Account<'info, Marketplace>,
+  #[account(
+    init, payer = payer, space = 0,
+    seeds = [
+      b"marketplace-vault".as_ref(),
+      marketplace.key().as_ref(),
+    ],
+    bump,
+  )]
+  /// CHECK: Vault account for transfering funds, no data
+  pub marketplace_vault: UncheckedAccount<'info>,
   pub update_authority: Signer<'info>,
   #[account(mut)]
   pub payer: Signer<'info>,
@@ -204,7 +216,6 @@ pub struct DelistNft<'info> {
 #[instruction(
   token_type: TokenType,
   escrow_nonce: u8,
-  vault_nonce: u8,
 )]
 pub struct BuyNft<'info> {
   #[account(
@@ -275,7 +286,7 @@ pub struct BuyNft<'info> {
       b"marketplace-vault".as_ref(),
       marketplace.key().as_ref(),
     ],
-    bump = vault_nonce,
+    bump,
   )]
   /// CHECK: Vault account for transfering funds, no data
   pub marketplace_vault: UncheckedAccount<'info>,
