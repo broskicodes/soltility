@@ -3,7 +3,6 @@ use {
   crate::context::DelistNft,
   crate::error::*,
   solana_program::{
-    entrypoint::ProgramResult,
     program::invoke_signed,
   },
   spl_token::instruction::{
@@ -15,15 +14,11 @@ use {
 pub fn process_delist_nft(
   ctx: Context<DelistNft>,
   escrow_nonce: u8,
-) -> ProgramResult {
+) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
 
-  if !escrow_account.active {
-    return Err(ProgramError::from(MarketplaceError::NftUnlisted));
-  }
-
   if escrow_account.seller != *ctx.accounts.seller.key {
-    return Err(ProgramError::from(MarketplaceError::UnknownSeller));
+    return Err(error!(MarketplaceError::UnknownSeller));
   }
 
   let transfer_ix = transfer(

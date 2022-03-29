@@ -3,7 +3,6 @@ use {
   crate::context::BuyNft,
   crate::error::*,
   solana_program::{
-    entrypoint::ProgramResult,
     program::{
       invoke_signed,
       invoke,
@@ -23,21 +22,17 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
   ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
   escrow_nonce: u8,
   vault_nonce: u8,
-) -> ProgramResult {
+) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
 
-  if !escrow_account.active {
-    return Err(ProgramError::from(MarketplaceError::NftUnlisted));
-  }
-
   if escrow_account.seller != *ctx.accounts.seller.key {
-    return Err(ProgramError::from(MarketplaceError::UnknownSeller));
+    return Err(error!(MarketplaceError::UnknownSeller));
   }
 
   let buyer_pay_ix = solana_program::system_instruction::transfer(
     ctx.accounts.buyer.key,
     &ctx.accounts.marketplace_vault.key(),
-    escrow_account.price
+    escrow_account.price_per_token
   );
 
   invoke(
@@ -48,7 +43,7 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
     ]
   )?;
 
-  let payout_amount = escrow_account.price - (escrow_account.price / 100 * ctx.accounts.marketplace.fee as u64);
+  let payout_amount = escrow_account.price_per_token - (escrow_account.price_per_token / 100 * ctx.accounts.marketplace.fee as u64);
   let metadata = Metadata::from_account_info(&ctx.accounts.nft_metadata_account.to_account_info())?;
   let creators_share = payout_amount / 10000 * metadata.data.seller_fee_basis_points as u64;
 
@@ -58,7 +53,7 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
         let mut i: usize = 0;
         for creator in creators.iter() {
           if creator.share > 0 {
-            let to_account = (ctx.remaining_accounts.get(i).ok_or(ProgramError::from(MarketplaceError::BadCreatorInfo))?).clone();
+            let to_account = (ctx.remaining_accounts.get(i).ok_or(error!(MarketplaceError::BadCreatorInfo))?).clone();
 
             invoke_signed(
               &solana_program::system_instruction::transfer(
@@ -82,11 +77,8 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
             i += 1;
           }
         }
-        // return Ok(());
       },
-      None => { 
-        // return Ok(()); 
-      }
+      None => {}
     };
   }
 

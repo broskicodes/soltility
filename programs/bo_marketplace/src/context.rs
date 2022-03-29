@@ -12,24 +12,28 @@ use {
 };
 
 #[derive(Accounts)]
+#[instruction(token_type: u8)]
 pub struct InitializeMarketplace<'info> {
   #[account(
-    init, payer = payer, space = 32,
+    init, payer = payer, space = 8+1+32+1+1,
     seeds = [
-      b"marketplace".as_ref()
+      b"marketplace".as_ref(),
+      &[token_type],
     ],
-    bump
+    bump,
   )]
   pub marketplace: Account<'info, Marketplace>,
+  pub update_authority: Signer<'info>,
   #[account(mut)]
   pub payer: Signer<'info>,
   pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
+#[instruction(token_type: u8)]
 pub struct RegisterStandardCollection<'info> {
   #[account(
-    init, payer = payer, space = 8+1+32+4+(4+32)+(1+4+128),
+    init, payer = payer, space = 8+1+32+(4+32),
     seeds = [
       b"collection".as_ref(),
       marketplace.key().as_ref(),
@@ -41,19 +45,32 @@ pub struct RegisterStandardCollection<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      &[token_type],
     ],
     bump
   )]
   pub marketplace: Account<'info, Marketplace>,
   #[account(mut)]
   pub payer: Signer<'info>,
+  pub nft_mint: Account<'info, Mint>,
+  #[account(
+    seeds = [
+      b"metadata".as_ref(),  
+      mpl_token_metadata::ID.as_ref(),
+      nft_mint.key().as_ref(),
+    ],
+    seeds::program = mpl_token_metadata::ID,
+    bump,
+  )]
+  /// CHECK: Metaplex Metadata state account
+  pub metadata_account: UncheckedAccount<'info>,
   /// CHECK: Candy Machine ID or Collection ID
   pub collection_id: UncheckedAccount<'info>,
   pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
-// #[instruction(escrow_nonce: u8)]
+#[instruction(token_type: u8)]
 pub struct ListNft<'info> {
   #[account(
     init_if_needed, payer = seller, space = 8+1+32+32+32+32+8, 
@@ -108,6 +125,7 @@ pub struct ListNft<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      &[token_type],
     ],
     bump
   )]
@@ -123,7 +141,10 @@ pub struct ListNft<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(escrow_nonce: u8)]
+#[instruction(
+  token_type: u8,
+  escrow_nonce: u8
+)]
 pub struct DelistNft<'info> {
   #[account(
     mut,
@@ -166,6 +187,7 @@ pub struct DelistNft<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      &[token_type],
     ],
     bump
   )]
@@ -180,6 +202,7 @@ pub struct DelistNft<'info> {
 
 #[derive(Accounts)]
 #[instruction(
+  token_type: u8,
   escrow_nonce: u8,
   vault_nonce: u8,
 )]
@@ -236,6 +259,7 @@ pub struct BuyNft<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      &[token_type],
     ],
     bump
   )]

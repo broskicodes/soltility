@@ -6,47 +6,38 @@ use {
 pub enum CandyMachineVersion {
   V1,
   V2,
-  // Multiple,
 }
 
 #[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
-pub enum MarketplaceType {
-  NFT,
-  Token,
+pub enum TokenType {
+  NonFungible,
+  Fungible,
 }
 
 #[account]
 pub struct Marketplace {
+  pub token_type: TokenType,
+  pub update_authority: Pubkey,
   // In percentage
-  pub m_type: MarketplaceType,
   pub fee: u8,
+  pub is_mutable: bool,
 }
-
-#[account]
-pub struct MarketplaceVault {}
 
 #[account]
 pub struct Collection {
   pub version: CandyMachineVersion,
   pub collection_id: Pubkey,
-  pub size: u32,
   pub name: String,
-  // pub hash_list: Option<Pubkey>,
-  pub hash_list_link: Option<String>,
-}
-
-#[account]
-pub struct HashList {
-  collection: Pubkey,
-  mints: Vec<Pubkey>,
 }
 
 #[account]
 pub struct Escrow {
-  pub active: bool,
-  pub collection: Pubkey,
+  pub token_type: TokenType,
+  pub marketplace: Pubkey,
+  pub collection: Option<Pubkey>,
+  pub metadata: Option<Pubkey>,
   pub seller: Pubkey,
   pub mint: Pubkey,
   pub token_account: Pubkey,
-  pub price: u64,
+  pub price_per_token: u64,
 }
