@@ -50,11 +50,12 @@ export const getStaticProps = async (ctx: any) => {
     .map((acc) => {
       return {
         ...acc.account as EscrowAccountData,
+        marketplace: acc.account.marketplace.toString(),
         collection: acc.account.collection.toString(),
         seller: acc.account.seller.toString(),
         mint: acc.account.mint.toString(),
         tokenAccount: acc.account.tokenAccount.toString(),
-        price: acc.account.price.toNumber() / LAMPORTS_PER_SOL,
+        pricePerToken: acc.account.pricePerToken.toNumber() / LAMPORTS_PER_SOL,
       };
     });
 
@@ -67,11 +68,12 @@ export const getStaticProps = async (ctx: any) => {
 
 interface JSEscrowAccountData {
   active: boolean,
+  marketplace: string,
   collection: string,
   seller: string,
   mint: string,
   tokenAccount: string,
-  price: number,
+  pricePerToken: number,
 }
 
 const CollectionPage: NextPage<{ data: JSEscrowAccountData[] }> = ({ data }) => {
@@ -84,6 +86,7 @@ const CollectionPage: NextPage<{ data: JSEscrowAccountData[] }> = ({ data }) => 
       data.map((d) => {
         return {
           ...d,
+          marketplace: new PublicKey(d.marketplace),
           collection: new PublicKey(d.collection),
           seller: new PublicKey(d.seller),
           mint: new PublicKey(d.mint),

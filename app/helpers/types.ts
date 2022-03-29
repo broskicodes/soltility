@@ -7,6 +7,12 @@ export enum CandyMachineVersion {
   Other,
 };
 
+export enum TokenType {
+  Nonfungible,
+  Fungible,
+  Other,
+};
+
 export interface NftData {
   mint: PublicKey,
   collectionId: PublicKey,
@@ -25,9 +31,11 @@ export interface CollectionData {
 
 export interface EscrowAccountData {
   active: boolean,
-  collection: PublicKey,
+  marketplace: PublicKey,
+  collection?: PublicKey,
+  metadata?: PublicKey,
   seller: PublicKey,
   mint: PublicKey,
   tokenAccount: PublicKey,
-  price: number,
+  pricePerToken: number,
 }

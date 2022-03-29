@@ -1,10 +1,12 @@
 import { PublicKey } from "@solana/web3.js"
 import { MARKETPLACE_PROGRAM_ADDRESS } from "./constants"
+import { TokenType } from "./types";
 
-export const getMarketplacePDA = async () => {
+export const getMarketplacePDA = async (type: TokenType) => {
   const [marketplace] = await PublicKey.findProgramAddress(
     [
       Buffer.from("marketplace"),
+      Buffer.from([type])
     ],
     MARKETPLACE_PROGRAM_ADDRESS,
   );
@@ -12,11 +14,11 @@ export const getMarketplacePDA = async () => {
   return marketplace;
 }
 
-export const getMarketplaceVaultPDA = async (): Promise<[PublicKey, number]> => {
+export const getMarketplaceVaultPDA = async (type: TokenType): Promise<[PublicKey, number]> => {
   const [marketplace, bump] = await PublicKey.findProgramAddress(
     [
       Buffer.from("marketplace-vault"),
-      (await getMarketplacePDA()).toBuffer(),
+      (await getMarketplacePDA(type)).toBuffer(),
     ],
     MARKETPLACE_PROGRAM_ADDRESS,
   );
@@ -30,7 +32,7 @@ export const getCollectionPDA = async (
   const [collection] = await PublicKey.findProgramAddress(
     [
       Buffer.from("collection"),
-      (await getMarketplacePDA()).toBuffer(),
+      (await getMarketplacePDA(TokenType.Nonfungible)).toBuffer(),
       collectionId.toBuffer()
     ],
     MARKETPLACE_PROGRAM_ADDRESS,
@@ -40,6 +42,7 @@ export const getCollectionPDA = async (
 }
 
 export const getEscrowPDA = async (
+  type: TokenType,
   collectionId: PublicKey,
   mint: PublicKey,
   seller: PublicKey,
@@ -47,7 +50,7 @@ export const getEscrowPDA = async (
   const [escrow, bump] = await PublicKey.findProgramAddress(
     [
       Buffer.from("escrow"),
-      (await getMarketplacePDA()).toBuffer(),
+      (await getMarketplacePDA(type)).toBuffer(),
       (await getCollectionPDA(collectionId)).toBuffer(),
       mint.toBuffer(),
       seller.toBuffer()
@@ -59,6 +62,7 @@ export const getEscrowPDA = async (
 }
 
 export const getEscrowTokenPDA = async (
+  type: TokenType,
   collectionId: PublicKey,
   mint: PublicKey,
   seller: PublicKey,
@@ -67,6 +71,7 @@ export const getEscrowTokenPDA = async (
     [
       Buffer.from("token-account"),
       (await getEscrowPDA(
+        type,
         collectionId,
         mint,
         seller,

@@ -1,6 +1,6 @@
-import { getProgram } from "@helpers/mixins";
+import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
 import { getCollectionPDA, getEscrowPDA, getEscrowTokenPDA, getMarketplacePDA } from "@helpers/pdas";
-import { NftData } from "@helpers/types";
+import { NftData, TokenType } from "@helpers/types";
 import { Provider, BN } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -17,20 +17,23 @@ export const ListNft = async (
 
   const ix = await program.methods
     .listNft(
+      tokenTypeEnumToAnchorEnum(TokenType.Nonfungible),
       new BN(price * LAMPORTS_PER_SOL),
     )
     .accounts({
-      marketplace: await getMarketplacePDA(),
+      marketplace: await getMarketplacePDA(TokenType.Nonfungible),
       collectionId: collectionId,
       collection: await getCollectionPDA(collectionId),
       nftMint: mint,
       nftMetadataAccount: await Metadata.getPDA(mint),
       escrowAccount: (await getEscrowPDA(
+        TokenType.Nonfungible,
         collectionId,
         mint,
         publicKey,
       ))[0],
       escrowTokenAccount: await getEscrowTokenPDA(
+        TokenType.Nonfungible,
         collectionId,
         mint,
         publicKey,

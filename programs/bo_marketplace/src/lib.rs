@@ -8,7 +8,6 @@ use {
   crate::context::*,
   crate::processor::*,
   crate::state::*,
-  mpl_token_metadata::state::Creator,
 };
 
 declare_id!("9XTHyBBSDBVxnDm8yMv4qNHDYbaEMAmaVBfJoMYJX4ui");
@@ -19,7 +18,6 @@ pub mod bo_marketplace {
 
   pub fn initialize_marketplace(
     ctx: Context<InitializeMarketplace>,
-    _token_type: TokenType,
     token_type: TokenType,
     fee: u8,
     is_mutable: bool,
@@ -86,15 +84,11 @@ pub mod bo_marketplace {
     _token_type: TokenType,
     name: String,
     symbol: String,
-    seller_fee_basis_points: Option<u16>,
-    creators: Option<Vec<Creator>>,
   ) -> Result<()> {
     process_create_token_metadata::process_create_token_metadata(
       ctx,
       name,
       symbol,
-      seller_fee_basis_points,
-      creators,
     )
   }
 

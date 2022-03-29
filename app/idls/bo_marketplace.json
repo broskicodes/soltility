@@ -11,6 +11,11 @@
           "isSigner": false
         },
         {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -21,7 +26,22 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "fee",
+          "type": "u8"
+        },
+        {
+          "name": "isMutable",
+          "type": "bool"
+        }
+      ]
     },
     {
       "name": "registerStandardCollection",
@@ -42,6 +62,16 @@
           "isSigner": true
         },
         {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "collectionId",
           "isMut": false,
           "isSigner": false
@@ -54,6 +84,12 @@
       ],
       "args": [
         {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
           "name": "version",
           "type": {
             "defined": "CandyMachineVersion"
@@ -62,16 +98,6 @@
         {
           "name": "name",
           "type": "string"
-        },
-        {
-          "name": "size",
-          "type": "u32"
-        },
-        {
-          "name": "hashListLink",
-          "type": {
-            "option": "string"
-          }
         }
       ]
     },
@@ -146,6 +172,12 @@
       ],
       "args": [
         {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
           "name": "price",
           "type": "u64"
         }
@@ -206,6 +238,12 @@
         }
       ],
       "args": [
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
         {
           "name": "escrowNonce",
           "type": "u8"
@@ -293,12 +331,312 @@
       ],
       "args": [
         {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
           "name": "escrowNonce",
           "type": "u8"
         },
         {
           "name": "vaultNonce",
           "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "createTokenMetadata",
+      "accounts": [
+        {
+          "name": "metadataAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "listToken",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sellerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "pricePerToken",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "delistToken",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sellerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "escrowNonce",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "buyToken",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "buyerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplaceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "escrowNonce",
+          "type": "u8"
+        },
+        {
+          "name": "vaultNonce",
+          "type": "u8"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
         }
       ]
     }
@@ -310,23 +648,24 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "mType",
+            "name": "tokenType",
             "type": {
-              "defined": "MarketplaceType"
+              "defined": "TokenType"
             }
+          },
+          {
+            "name": "updateAuthority",
+            "type": "publicKey"
           },
           {
             "name": "fee",
             "type": "u8"
+          },
+          {
+            "name": "isMutable",
+            "type": "bool"
           }
         ]
-      }
-    },
-    {
-      "name": "MarketplaceVault",
-      "type": {
-        "kind": "struct",
-        "fields": []
       }
     },
     {
@@ -345,36 +684,8 @@
             "type": "publicKey"
           },
           {
-            "name": "size",
-            "type": "u32"
-          },
-          {
             "name": "name",
             "type": "string"
-          },
-          {
-            "name": "hashListLink",
-            "type": {
-              "option": "string"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "HashList",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "collection",
-            "type": "publicKey"
-          },
-          {
-            "name": "mints",
-            "type": {
-              "vec": "publicKey"
-            }
           }
         ]
       }
@@ -385,12 +696,26 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "active",
-            "type": "bool"
+            "name": "tokenType",
+            "type": {
+              "defined": "TokenType"
+            }
+          },
+          {
+            "name": "marketplace",
+            "type": "publicKey"
           },
           {
             "name": "collection",
-            "type": "publicKey"
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "metadata",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
             "name": "seller",
@@ -405,7 +730,7 @@
             "type": "publicKey"
           },
           {
-            "name": "price",
+            "name": "pricePerToken",
             "type": "u64"
           }
         ]
@@ -428,15 +753,15 @@
       }
     },
     {
-      "name": "MarketplaceType",
+      "name": "TokenType",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "NFT"
+            "name": "NonFungible"
           },
           {
-            "name": "Token"
+            "name": "Fungible"
           }
         ]
       }
@@ -445,18 +770,18 @@
   "errors": [
     {
       "code": 6000,
-      "name": "MissingHashList",
-      "msg": "Hash List must be provided when using multiple Candy Machines in single collection."
-    },
-    {
-      "code": 6001,
       "name": "NftListed",
       "msg": "Nft already listed. Must delist first to update listing."
     },
     {
-      "code": 6002,
+      "code": 6001,
       "name": "NftUnlisted",
-      "msg": "Nft is already unlisted."
+      "msg": "Nft not listed."
+    },
+    {
+      "code": 6002,
+      "name": "MismatchedNft",
+      "msg": "Nft is not part of the passed collection."
     },
     {
       "code": 6003,
@@ -465,16 +790,26 @@
     },
     {
       "code": 6004,
-      "name": "InvalidCollection",
-      "msg": "Nft is not from the provided collection."
+      "name": "InvalidCollectionId",
+      "msg": "Invalid collection id passed."
     },
     {
       "code": 6005,
       "name": "BadCreatorInfo",
       "msg": "Passed Creator AccountInfo is missing or incorrect."
+    },
+    {
+      "code": 6006,
+      "name": "InvalidMarketplaceFee",
+      "msg": "Invalid marketplace fee percentage."
+    },
+    {
+      "code": 6007,
+      "name": "WrongMarketplace",
+      "msg": "Attempting to list token/nft on incorrect marketplace."
     }
   ],
   "metadata": {
-    "address": "A6mhgyneRNJEgP83JdbMcwb3FSKgwQoYHwXSVrJzg866"
+    "address": "9XTHyBBSDBVxnDm8yMv4qNHDYbaEMAmaVBfJoMYJX4ui"
   }
 }

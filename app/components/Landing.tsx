@@ -7,7 +7,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata'
 import { RegisterStandardCollection } from "@instructions/RegisterStandardCollection";
 import { getCollectionPDA } from "@helpers/pdas";
-import { CollectionData } from "@helpers/types";
+import { CandyMachineVersion, CollectionData, TokenType } from "@helpers/types";
 
 export const Landing: FC = () => {
   const { connection } = useConnection();
@@ -16,18 +16,30 @@ export const Landing: FC = () => {
   const [provider, setProvider] = useState(getProvider(connection, wallet as Wallet));
   const [collections, setCollections] = useState<CollectionData[]>([])
   
-  // const initMarketplace = async () => {
-  //   const ixs: TransactionInstruction[] = [];
+  const initMarketplaces = async () => {
+    const ixs: TransactionInstruction[] = [];
 
-  //   ixs.push(await InitilizeMarketplace(provider));
+    ixs.push(await InitilizeMarketplace(
+      provider,
+      TokenType.Nonfungible,
+      1,
+      true,
+    ));
 
-  //   await createAndSendTx(
-  //     ixs, 
-  //     connection, 
-  //     publicKey as PublicKey, 
-  //     sendTransaction
-  //   );
-  // }
+    ixs.push(await InitilizeMarketplace(
+      provider,
+      TokenType.Fungible,
+      1,
+      true,
+    ));
+
+    await createAndSendTx(
+      ixs, 
+      connection, 
+      publicKey as PublicKey, 
+      sendTransaction
+    );
+  }
   
   const registerNewCollection = async () => {
     const ixs: TransactionInstruction[] = [];
@@ -35,9 +47,9 @@ export const Landing: FC = () => {
     ixs.push(await RegisterStandardCollection(
       provider,
       new PublicKey("Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc"),
+      new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA"),
       "Panda Social Club",
-      10,
-      "https://arweave.net/4YDdoC2y-gpCpYk58UT89-TQFmM8Tbz8sZJY35MhY90",
+      CandyMachineVersion.V2,
     ));
 
     await createAndSendTx(
@@ -89,7 +101,7 @@ export const Landing: FC = () => {
       {publicKey && 
         <div>
           <div className="flex space-x-2">
-            {/* <button onClick={initMarketplace}>Init Market</button> */}
+            {/* <button onClick={initMarketplaces}>Init Markets</button> */}
             <button onClick={registerNewCollection}>New Collection</button>
             <button onClick={tester}>test</button>
           </div>

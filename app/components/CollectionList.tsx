@@ -79,7 +79,7 @@ export const CollectionList: FC<CollectionListProps> = ({ listings, collectionId
                 key={l.mint.toString()} 
                 onClick={() => { 
                   l.seller.toString() === publicKey?.toString()
-                    ? buy(l.mint, l.seller) 
+                    ? delist(l.mint) 
                     : buy(l.mint, l.seller);
                 }}
                 className="hover:underline"

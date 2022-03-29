@@ -73,7 +73,7 @@ pub struct RegisterStandardCollection<'info> {
 #[instruction(token_type: TokenType)]
 pub struct ListNft<'info> {
   #[account(
-    init_if_needed, payer = seller, space = 8+1+32+32+32+32+8, 
+    init_if_needed, payer = seller, space = 8+1+32+(4+32)+32+32+32+8, 
     seeds = [
       b"escrow".as_ref(),
       marketplace.key().as_ref(),
@@ -158,7 +158,7 @@ pub struct DelistNft<'info> {
     bump = escrow_nonce,
     close = seller,
   )]
-  pub escrow_account: Account<'info, Escrow>,
+  pub escrow_account: Box<Account<'info, Escrow>>,
   #[account(
     mut,
     seeds = [
@@ -183,7 +183,7 @@ pub struct DelistNft<'info> {
     ],
     bump,
   )]
-  pub collection: Account<'info, Collection>,
+  pub collection: Box<Account<'info, Collection>>,
   #[account(
     seeds = [
       b"marketplace".as_ref(),
@@ -191,7 +191,7 @@ pub struct DelistNft<'info> {
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
