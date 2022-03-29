@@ -18,4 +18,6 @@ pub enum MarketplaceError {
   BadCreatorInfo,
   #[msg("Invalid marketplace fee percentage.")]
   InvalidMarketplaceFee,
+  #[msg("Attempting to list token/nft on incorrect marketplace.")]
+  WrongMarketplace,
 }
