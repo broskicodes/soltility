@@ -8,7 +8,7 @@ export enum CandyMachineVersion {
 };
 
 export enum TokenType {
-  Nonfungible,
+  NonFungible,
   Fungible,
   Other,
 };

@@ -11,6 +11,11 @@
           "isSigner": false
         },
         {
+          "name": "marketplaceVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "updateAuthority",
           "isMut": false,
           "isSigner": true
@@ -339,10 +344,6 @@
         {
           "name": "escrowNonce",
           "type": "u8"
-        },
-        {
-          "name": "vaultNonce",
-          "type": "u8"
         }
       ]
     },
@@ -356,8 +357,8 @@
         },
         {
           "name": "mint",
-          "isMut": false,
-          "isSigner": false
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "mintAuthority",
@@ -383,15 +384,19 @@
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
-        {
-          "name": "tokenType",
-          "type": {
-            "defined": "TokenType"
-          }
-        },
         {
           "name": "name",
           "type": "string"
@@ -628,10 +633,6 @@
         },
         {
           "name": "escrowNonce",
-          "type": "u8"
-        },
-        {
-          "name": "vaultNonce",
           "type": "u8"
         },
         {

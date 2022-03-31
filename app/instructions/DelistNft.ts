@@ -15,27 +15,30 @@ export const DelistNft = async (
   // const { mint, collectionId } = nft;
   const { publicKey } = provider.wallet;
 
+  const collection = await getCollectionPDA(collectionId);
+
   const [escrowAccount, bump] = await getEscrowPDA(
-    TokenType.Nonfungible,
-    collectionId,
+    TokenType.NonFungible,
+    collection,
     mint,
     publicKey,
   );
 
+
   const ix = await program.methods
     .delistNft(
-      tokenTypeEnumToAnchorEnum(TokenType.Nonfungible),
+      tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       bump,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.Nonfungible),
+      marketplace: await getMarketplacePDA(TokenType.NonFungible),
       collectionId: collectionId,
-      collection: await getCollectionPDA(collectionId),
+      collection: collection,
       nftMint: mint,
       escrowAccount: escrowAccount,
       escrowTokenAccount: await getEscrowTokenPDA(
-        TokenType.Nonfungible,
-        collectionId,
+        TokenType.NonFungible,
+        collection,
         mint,
         publicKey,
       ),

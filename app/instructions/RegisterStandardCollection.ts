@@ -16,12 +16,12 @@ export const RegisterStandardCollection = async (
 
   const ix = await program.methods
     .registerStandardCollection(
-      tokenTypeEnumToAnchorEnum(TokenType.Nonfungible),
+      tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       candyMachineVersionToAnchorEnum(candyMachineVersion),
       name,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.Nonfungible),
+      marketplace: await getMarketplacePDA(TokenType.NonFungible),
       collectionId: collectionId,
       collection: await getCollectionPDA(collectionId),
       nftMint: nftMint,

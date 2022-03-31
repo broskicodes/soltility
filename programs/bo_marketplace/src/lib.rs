@@ -80,7 +80,6 @@ pub mod bo_marketplace {
 
   pub fn create_token_metadata(
     ctx: Context<CreateTokenMetadata>,
-    _token_type: TokenType,
     name: String,
     symbol: String,
   ) -> Result<()> {
@@ -120,13 +119,11 @@ pub mod bo_marketplace {
     ctx: Context<'a, 'b, 'c, 'info, BuyToken<'info>>,
     _token_type: TokenType,
     escrow_nonce: u8,
-    vault_nonce: u8,
     amount: u64,
   ) -> Result<()> {    
     process_buy_token::process_buy_token(
       ctx,
       escrow_nonce,
-      vault_nonce,
       amount,
     )
   }

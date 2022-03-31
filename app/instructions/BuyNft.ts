@@ -16,13 +16,15 @@ export const BuyNft = async (
   // const { mint, collectionId } = nft;
   const { publicKey } = provider.wallet;
 
+  const collection = await getCollectionPDA(collectionId);
+
   const [escrowAccount, b1] = await getEscrowPDA(
-    TokenType.Nonfungible,
-    collectionId,
+    TokenType.NonFungible,
+    collection,
     mint,
     seller,
   );
-  const [marketplaceVault, b2] = await getMarketplaceVaultPDA(TokenType.Nonfungible);
+  const [marketplaceVault, b2] = await getMarketplaceVaultPDA(TokenType.NonFungible);
 
   const mtdtAcnt = await Metadata.getPDA(mint);
   const metadata = await Metadata.load(provider.connection, mtdtAcnt);
@@ -43,20 +45,19 @@ export const BuyNft = async (
 
   const ix = await program.methods
     .buyNft(
-      tokenTypeEnumToAnchorEnum(TokenType.Nonfungible),
+      tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       b1,
-      b2,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.Nonfungible),
+      marketplace: await getMarketplacePDA(TokenType.NonFungible),
         collectionId: collectionId,
-        collection: await getCollectionPDA(collectionId),
+        collection: collection,
         nftMint: mint,
         nftMetadataAccount: mtdtAcnt,
         escrowAccount: escrowAccount,
         escrowTokenAccount: await getEscrowTokenPDA(
-          TokenType.Nonfungible,
-          collectionId,
+          TokenType.NonFungible,
+          collection,
           mint,
           seller,
         ),

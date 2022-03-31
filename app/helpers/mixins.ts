@@ -7,6 +7,7 @@ import {
 } from "@project-serum/anchor";
 import { 
   Connection, 
+  Keypair, 
   PublicKey, 
   Transaction, 
   TransactionInstruction 
@@ -43,6 +44,7 @@ export const createAndSendTx = async (
   connection: Connection,
   user: PublicKey,
   sendTransaction: Function,
+  signers?: Keypair[],
 ) => {
   const tx = new Transaction({
     recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
@@ -52,7 +54,11 @@ export const createAndSendTx = async (
     tx.add(ix);
   });
 
-  const sig = await sendTransaction(tx, connection);
+  const sig = await sendTransaction(
+    tx, 
+    connection, 
+    { signers: signers }
+  );
 
   console.log(sig);
 
@@ -85,7 +91,7 @@ export const tokenTypeEnumToAnchorEnum = (type: TokenType) => {
   switch(type) {
     case TokenType.Fungible:
       return { 'fungible': {} };
-    case TokenType.Nonfungible:
+    case TokenType.NonFungible:
       return { 'nonFungible': {} };
     default:
       throw new Error("Unsupported token type");

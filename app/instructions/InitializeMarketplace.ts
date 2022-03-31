@@ -1,5 +1,5 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
-import { getMarketplacePDA } from "@helpers/pdas";
+import { getMarketplacePDA, getMarketplaceVaultPDA } from "@helpers/pdas";
 import { TokenType } from "@helpers/types";
 import { Provider } from "@project-serum/anchor";
 
@@ -19,6 +19,7 @@ export const InitilizeMarketplace = async (
     )
     .accounts({
       marketplace: await getMarketplacePDA(type),
+      marketplaceVault: (await getMarketplaceVaultPDA(type))[0],
     })
     .instruction();
 

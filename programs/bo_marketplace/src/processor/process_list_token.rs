@@ -20,11 +20,10 @@ pub fn process_list_token(
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
   let metadata = match Metadata::from_account_info(&ctx.accounts.metadata_account.to_account_info()) {
-    Ok(mtdt) => {
-      msg!("{:?}", mtdt);
+    Ok(_mtdt) => {
       Some(*ctx.accounts.metadata_account.key)
     },
-    ProgramError => None
+    _ => None
   };
 
   match token_type {
@@ -37,7 +36,7 @@ pub fn process_list_token(
     &ctx.accounts.seller_token_account.key(),
     &ctx.accounts.escrow_token_account.key(),
     ctx.accounts.seller.key,
-    &[ctx.accounts.seller.key],
+    &[],
     amount,
   )?;
 

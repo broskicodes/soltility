@@ -43,6 +43,7 @@ pub fn process_create_token_metadata(
       ctx.accounts.update_authority.to_account_info(),
       ctx.accounts.system_program.to_account_info(),
       ctx.accounts.rent.to_account_info(),
+      ctx.accounts.token_metadata_program.to_account_info(),
     ]
   )?;
 

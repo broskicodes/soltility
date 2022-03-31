@@ -312,6 +312,11 @@ pub struct CreateTokenMetadata<'info> {
   #[account(mut)]
   /// CHECK: Metaplex Metadata state account
   pub metadata_account: UncheckedAccount<'info>,
+  #[account(
+    init_if_needed, payer = payer,
+    mint::authority = mint_authority,
+    mint::decimals = 6,
+  )]
   pub mint: Account<'info, Mint>,
   pub mint_authority: Signer<'info>,
   pub update_authority: Signer<'info>,
@@ -319,13 +324,17 @@ pub struct CreateTokenMetadata<'info> {
   pub payer: Signer<'info>,
   pub rent: Sysvar<'info, Rent>,
   pub system_program: Program<'info, System>,
+  pub token_program: Program<'info, Token>,
+  #[account(address = mpl_token_metadata::ID)]
+  /// CHECK: Token Metadata Program
+  pub token_metadata_program: UncheckedAccount<'info>
 }
 
 #[derive(Accounts)]
 #[instruction(token_type: TokenType)]
 pub struct ListToken<'info> {
   #[account(
-    init_if_needed, payer = seller, space = 8+1+32+32+32+32+8, 
+    init, payer = seller, space = 8+1+32+(4+32)+32+32+32+8, 
     seeds = [
       b"escrow".as_ref(),
       marketplace.key().as_ref(),
@@ -337,7 +346,7 @@ pub struct ListToken<'info> {
   )]
   pub escrow_account: Box<Account<'info, Escrow>>,
   #[account(
-    init_if_needed, payer = seller,
+    init, payer = seller,
     token::mint = token_mint,
     token::authority = escrow_account,
     seeds = [
@@ -372,7 +381,7 @@ pub struct ListToken<'info> {
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -447,7 +456,6 @@ pub struct DelistToken<'info> {
 #[instruction(
   token_type: TokenType,
   escrow_nonce: u8,
-  vault_nonce: u8,
 )]
 pub struct BuyToken<'info> {
   #[account(
@@ -485,7 +493,7 @@ pub struct BuyToken<'info> {
   /// CHECK: Metaplex Metadata state account
   pub metadata_account: UncheckedAccount<'info>,
   #[account(
-    mut,
+    init_if_needed, payer = buyer,
     associated_token::mint = token_mint,
     associated_token::authority = buyer,
   )]
@@ -509,7 +517,7 @@ pub struct BuyToken<'info> {
       b"marketplace-vault".as_ref(),
       marketplace.key().as_ref(),
     ],
-    bump = vault_nonce,
+    bump,
   )]
   /// CHECK: Vault account for transfering funds, no data
   pub marketplace_vault: UncheckedAccount<'info>,

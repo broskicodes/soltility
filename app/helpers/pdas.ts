@@ -32,7 +32,7 @@ export const getCollectionPDA = async (
   const [collection] = await PublicKey.findProgramAddress(
     [
       Buffer.from("collection"),
-      (await getMarketplacePDA(TokenType.Nonfungible)).toBuffer(),
+      (await getMarketplacePDA(TokenType.NonFungible)).toBuffer(),
       collectionId.toBuffer()
     ],
     MARKETPLACE_PROGRAM_ADDRESS,
@@ -43,7 +43,7 @@ export const getCollectionPDA = async (
 
 export const getEscrowPDA = async (
   type: TokenType,
-  collectionId: PublicKey,
+  colOrMeta: PublicKey,
   mint: PublicKey,
   seller: PublicKey,
 ): Promise<[PublicKey, number]> => {
@@ -51,7 +51,7 @@ export const getEscrowPDA = async (
     [
       Buffer.from("escrow"),
       (await getMarketplacePDA(type)).toBuffer(),
-      (await getCollectionPDA(collectionId)).toBuffer(),
+      colOrMeta.toBuffer(),
       mint.toBuffer(),
       seller.toBuffer()
     ],
@@ -63,7 +63,7 @@ export const getEscrowPDA = async (
 
 export const getEscrowTokenPDA = async (
   type: TokenType,
-  collectionId: PublicKey,
+  colOrMeta: PublicKey,
   mint: PublicKey,
   seller: PublicKey,
 ) => {
@@ -72,7 +72,7 @@ export const getEscrowTokenPDA = async (
       Buffer.from("token-account"),
       (await getEscrowPDA(
         type,
-        collectionId,
+        colOrMeta,
         mint,
         seller,
       ))[0].toBuffer(),
