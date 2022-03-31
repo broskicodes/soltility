@@ -1,6 +1,6 @@
-import { getProgram } from "@helpers/mixins";
+import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
 import { getCollectionPDA, getEscrowPDA, getEscrowTokenPDA, getMarketplacePDA, getMarketplaceVaultPDA } from "@helpers/pdas";
-import { NftData } from "@helpers/types";
+import { NftData, TokenType } from "@helpers/types";
 import { Provider, BN } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -16,12 +16,15 @@ export const BuyNft = async (
   // const { mint, collectionId } = nft;
   const { publicKey } = provider.wallet;
 
+  const collection = await getCollectionPDA(collectionId);
+
   const [escrowAccount, b1] = await getEscrowPDA(
-    collectionId,
+    TokenType.NonFungible,
+    collection,
     mint,
     seller,
   );
-  const [marketplaceVault, b2] = await getMarketplaceVaultPDA();
+  const [marketplaceVault, b2] = await getMarketplaceVaultPDA(TokenType.NonFungible);
 
   const mtdtAcnt = await Metadata.getPDA(mint);
   const metadata = await Metadata.load(provider.connection, mtdtAcnt);
@@ -42,18 +45,19 @@ export const BuyNft = async (
 
   const ix = await program.methods
     .buyNft(
+      tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       b1,
-      b2,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(),
+      marketplace: await getMarketplacePDA(TokenType.NonFungible),
         collectionId: collectionId,
-        collection: await getCollectionPDA(collectionId),
+        collection: collection,
         nftMint: mint,
         nftMetadataAccount: mtdtAcnt,
         escrowAccount: escrowAccount,
         escrowTokenAccount: await getEscrowTokenPDA(
-          collectionId,
+          TokenType.NonFungible,
+          collection,
           mint,
           seller,
         ),

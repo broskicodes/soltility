@@ -3,27 +3,43 @@ use {
   crate::context::RegisterStandardCollection,
   crate::state::*,
   crate::error::*,
-  solana_program::{
-    entrypoint::ProgramResult,
-  },
+  mpl_token_metadata::state::Metadata,
 };
 
 pub fn process_register_standard_collection(
   ctx: Context<RegisterStandardCollection>,
   version: CandyMachineVersion,
   name: String,
-  size: u32,
-  hash_list_link: Option<String>,
-) -> ProgramResult {
+) -> Result<()> {
   let collection = &mut ctx.accounts.collection;
+  let collection_id = &mut ctx.accounts.collection_id;
 
-  // Verify that the collection ID actually exists and is what it should be?
-  // Verify collection size and name
+  // Verify collection name?
+  let metadata = Metadata::from_account_info(&ctx.accounts.metadata_account.to_account_info())?;
+
+  let passed_collection_key = match version {
+    CandyMachineVersion::V1 => {
+      let candy_machine = &(metadata.data.creators.ok_or(MarketplaceError::InvalidCollectionId)?)[0];
+      if !candy_machine.verified {
+        return Err(error!(MarketplaceError::InvalidCollectionId));
+      }
+      candy_machine.address
+    },
+    CandyMachineVersion::V2 => {
+      let collection_data = metadata.collection.ok_or(MarketplaceError::InvalidCollectionId)?;
+      if !collection_data.verified{
+        return Err(error!(MarketplaceError::InvalidCollectionId));
+      }
+      collection_data.key
+    }
+  };
+
+  if collection_id.key() != passed_collection_key {
+    return Err(error!(MarketplaceError::InvalidCollectionId));
+  }
       
-  collection.hash_list_link = hash_list_link;
   collection.version = version;
   collection.name = name;
-  collection.size = size;
   collection.collection_id = *ctx.accounts.collection_id.key;
 
   Ok(())

@@ -1,12 +1,26 @@
 use {
   anchor_lang::prelude::*,
   crate::context::InitializeMarketplace,
-  solana_program::entrypoint::ProgramResult,
+  crate::state::TokenType,
+  crate::error::MarketplaceError,
 };
 
 pub fn process_initialize_marketplace(
   ctx: Context<InitializeMarketplace>,
-) -> ProgramResult {
-  msg!("Done");
+  token_type: TokenType,
+  fee: u8,
+  is_mutable: bool,
+) -> Result<()> {
+  let marketplace = &mut ctx.accounts.marketplace;
+
+  if fee > 100 {
+    return Err(error!(MarketplaceError::InvalidMarketplaceFee));
+  }
+
+  marketplace.fee = fee;
+  marketplace.token_type = token_type;
+  marketplace.update_authority = *ctx.accounts.update_authority.key;
+  marketplace.is_mutable = is_mutable;
+
   Ok(())
 }

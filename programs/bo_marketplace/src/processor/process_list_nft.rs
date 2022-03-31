@@ -4,7 +4,6 @@ use {
   crate::state::*,
   crate::error::*,
   solana_program::{
-    entrypoint::ProgramResult,
     program::invoke,
   },
   spl_token::instruction::transfer,
@@ -15,36 +14,38 @@ use {
 
 pub fn process_list_nft(
   ctx: Context<ListNft>,
+  token_type: TokenType,
   price: u64,
-) -> ProgramResult {
+) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
   let collection = &mut ctx.accounts.collection;
 
-  if escrow_account.active {
-    return Err(ProgramError::from(MarketplaceError::NftListed));
-  }
-
   let metadata = Metadata::from_account_info(&ctx.accounts.nft_metadata_account.to_account_info())?;
+
+  match token_type {
+    TokenType::NonFungible => Ok(()),
+    _ => Err(error!(MarketplaceError::WrongMarketplace))
+  }?;
 
   let nft_collection_address = match collection.version {
     CandyMachineVersion::V1 => {
-      let candy_machine = metadata.data.creators.unwrap()[0].clone();
+      let candy_machine = &(metadata.data.creators.ok_or(MarketplaceError::InvalidCollectionId)?)[0];
       if !candy_machine.verified {
-        return Err(ProgramError::from(MarketplaceError::InvalidCollection));
+        return Err(error!(MarketplaceError::MismatchedNft));
       }
       candy_machine.address
     },
     CandyMachineVersion::V2 => {
-      let collection = metadata.collection.unwrap().clone();
+      let collection = metadata.collection.ok_or(MarketplaceError::InvalidCollectionId)?;
       if !collection.verified {
-        return Err(ProgramError::from(MarketplaceError::InvalidCollection));
+        return Err(error!(MarketplaceError::MismatchedNft));
       }
       collection.key
     }
   };
 
   if collection.collection_id != nft_collection_address {
-    return Err(ProgramError::from(MarketplaceError::InvalidCollection));
+    return Err(error!(MarketplaceError::MismatchedNft));
   }
 
   let ix = transfer(
@@ -65,12 +66,12 @@ pub fn process_list_nft(
     ],
   )?;
   
-  escrow_account.collection = collection.key();
+  escrow_account.collection = Some(collection.key());
   escrow_account.seller = ctx.accounts.seller.key();
   escrow_account.mint = ctx.accounts.nft_mint.key();
   escrow_account.token_account = ctx.accounts.escrow_token_account.key();
-  escrow_account.price = price;
-  escrow_account.active = true;
+  escrow_account.price_per_token = price;
+  escrow_account.token_type = TokenType::NonFungible;
 
   Ok(())
 }

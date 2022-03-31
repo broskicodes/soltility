@@ -7,13 +7,14 @@ import {
 } from "@project-serum/anchor";
 import { 
   Connection, 
+  Keypair, 
   PublicKey, 
   Transaction, 
   TransactionInstruction 
 } from "@solana/web3.js";
 import idl from '../idls/bo_marketplace.json';
 import { MARKETPLACE_PROGRAM_ADDRESS } from "./constants";
-import { CandyMachineVersion } from "./types";
+import { CandyMachineVersion, TokenType } from "./types";
 
 export const getProgram = (
   provider?: Provider,
@@ -43,6 +44,7 @@ export const createAndSendTx = async (
   connection: Connection,
   user: PublicKey,
   sendTransaction: Function,
+  signers?: Keypair[],
 ) => {
   const tx = new Transaction({
     recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
@@ -52,7 +54,11 @@ export const createAndSendTx = async (
     tx.add(ix);
   });
 
-  const sig = await sendTransaction(tx, connection);
+  const sig = await sendTransaction(
+    tx, 
+    connection, 
+    { signers: signers }
+  );
 
   console.log(sig);
 
@@ -67,5 +73,27 @@ export const anchorVersionToEnum = (versionObj: Object) => {
       return CandyMachineVersion.V2;
     default:
       return CandyMachineVersion.Other;
+  }
+}
+
+export const candyMachineVersionToAnchorEnum = (version: CandyMachineVersion) => {
+  switch(version){
+    case CandyMachineVersion.V1:
+      return { 'v1': {} };
+    case CandyMachineVersion.V2:
+      return { 'v2': {} };
+    default:
+      throw new Error("Unsupported candy machine version");
+  }
+}
+
+export const tokenTypeEnumToAnchorEnum = (type: TokenType) => {
+  switch(type) {
+    case TokenType.Fungible:
+      return { 'fungible': {} };
+    case TokenType.NonFungible:
+      return { 'nonFungible': {} };
+    default:
+      throw new Error("Unsupported token type");
   }
 }

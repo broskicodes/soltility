@@ -1,6 +1,6 @@
-import { getProgram } from "@helpers/mixins";
+import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
 import { getCollectionPDA, getEscrowPDA, getEscrowTokenPDA, getMarketplacePDA } from "@helpers/pdas";
-import { NftData } from "@helpers/types";
+import { NftData, TokenType } from "@helpers/types";
 import { Provider, BN } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -15,24 +15,30 @@ export const DelistNft = async (
   // const { mint, collectionId } = nft;
   const { publicKey } = provider.wallet;
 
+  const collection = await getCollectionPDA(collectionId);
+
   const [escrowAccount, bump] = await getEscrowPDA(
-    collectionId,
+    TokenType.NonFungible,
+    collection,
     mint,
     publicKey,
   );
 
+
   const ix = await program.methods
     .delistNft(
+      tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       bump,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(),
+      marketplace: await getMarketplacePDA(TokenType.NonFungible),
       collectionId: collectionId,
-      collection: await getCollectionPDA(collectionId),
+      collection: collection,
       nftMint: mint,
       escrowAccount: escrowAccount,
       escrowTokenAccount: await getEscrowTokenPDA(
-        collectionId,
+        TokenType.NonFungible,
+        collection,
         mint,
         publicKey,
       ),
