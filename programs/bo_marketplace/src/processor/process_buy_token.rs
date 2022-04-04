@@ -49,7 +49,7 @@ pub fn process_buy_token<'a, 'b, 'c, 'info>(
     ]
   )?;
 
-  let payout_amount = total_price - (total_price / 100 * ctx.accounts.marketplace.fee as u64);
+  let payout_amount = total_price - (total_price / 10000 * ctx.accounts.marketplace.fee as u64);
   let _metadata = Metadata::from_account_info(&ctx.accounts.metadata_account.to_account_info())?;
   // let creators_share = payout_amount / 10000 * metadata.data.seller_fee_basis_points as u64;
 

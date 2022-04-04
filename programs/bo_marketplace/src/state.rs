@@ -15,12 +15,30 @@ pub enum TokenType {
 }
 
 #[account]
+pub struct MasterVault {
+  pub authority: Pubkey,
+  // Basis points
+  pub fee: u16,
+  pub extra_space: [u8; 256],
+}
+
+#[account]
+pub struct Organization {
+  pub authority: Pubkey,
+  pub name: String,
+  pub custom_vault: Option<Pubkey>,
+  pub extra_space: [u8; 256],
+}
+
+#[account]
 pub struct Marketplace {
   pub token_type: TokenType,
+  pub organization: Pubkey,
   pub update_authority: Pubkey,
-  // In percentage
-  pub fee: u8,
+  // In basis points
+  pub fee: u16,
   pub is_mutable: bool,
+  pub extra_space: [u8; 256],
 }
 
 #[account]
@@ -28,6 +46,7 @@ pub struct Collection {
   pub version: CandyMachineVersion,
   pub collection_id: Pubkey,
   pub name: String,
+  pub extra_space: [u8; 256],
 }
 
 #[account]
@@ -40,4 +59,5 @@ pub struct Escrow {
   pub mint: Pubkey,
   pub token_account: Pubkey,
   pub price_per_token: u64,
+  pub extra_space: [u8; 256],
 }

@@ -20,7 +20,7 @@ pub mod bo_marketplace {
   pub fn initialize_marketplace(
     ctx: Context<InitializeMarketplace>,
     token_type: TokenType,
-    fee: u8,
+    fee: u16,
     is_mutable: bool,
   ) -> Result<()> {
     process_initialize_marketplace::process_initialize_marketplace(

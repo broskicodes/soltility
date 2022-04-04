@@ -8,12 +8,12 @@ use {
 pub fn process_initialize_marketplace(
   ctx: Context<InitializeMarketplace>,
   token_type: TokenType,
-  fee: u8,
+  fee: u16,
   is_mutable: bool,
 ) -> Result<()> {
   let marketplace = &mut ctx.accounts.marketplace;
 
-  if fee > 100 {
+  if fee > 10000 {
     return Err(error!(MarketplaceError::InvalidMarketplaceFee));
   }
 
