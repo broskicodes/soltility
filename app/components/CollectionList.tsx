@@ -1,15 +1,16 @@
-import { createAndSendTx, getProvider } from "@helpers/mixins";
-import { EscrowAccountData } from "@helpers/types";
-import { BuyNft } from "@instructions/BuyNft";
-import { DelistNft } from "@instructions/DelistNft";
-import { Wallet } from "@project-serum/anchor";
-import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { FC, useEffect, useState } from "react";
+import { TEMP_ORG_NAME } from '@helpers/constants';
+import { createAndSendTx, getProvider } from '@helpers/mixins';
+import { EscrowAccountData } from '@helpers/types';
+import { BuyNft } from '@instructions/BuyNft';
+import { DelistNft } from '@instructions/DelistNft';
+import { Wallet } from '@project-serum/anchor';
+import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { FC, useEffect, useState } from 'react';
 
 interface CollectionListProps {
-  listings: EscrowAccountData[],
-  collectionId: PublicKey
+  listings: EscrowAccountData[];
+  collectionId: PublicKey;
 }
 export const CollectionList: FC<CollectionListProps> = ({ listings, collectionId }) => {
   const { connection } = useConnection();
@@ -21,75 +22,52 @@ export const CollectionList: FC<CollectionListProps> = ({ listings, collectionId
     // console.log((await connection.getTokenLargestAccounts(mint)).value[0].address.toString())
     const ixs: TransactionInstruction[] = [];
 
-    ixs.push(await DelistNft(
-      provider,
-      mint,
-      collectionId,
-    ));
+    ixs.push(await DelistNft(provider, mint, collectionId, TEMP_ORG_NAME));
 
     try {
-      await createAndSendTx(
-        ixs, 
-        connection, 
-        publicKey as PublicKey, 
-        sendTransaction
-      );
-    } catch(e) {
+      await createAndSendTx(ixs, connection, publicKey as PublicKey, sendTransaction);
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  const buy = async (
-    mint: PublicKey,
-    seller: PublicKey,
-  ) => {
+  const buy = async (mint: PublicKey, seller: PublicKey) => {
     console.log(mint.toString());
     const ixs: TransactionInstruction[] = [];
 
-    ixs.push(await BuyNft(
-      provider,
-      mint,
-      collectionId,
-      seller,
-    ));
+    ixs.push(await BuyNft(provider, mint, collectionId, seller, TEMP_ORG_NAME));
 
     try {
-      await createAndSendTx(
-        ixs, 
-        connection, 
-        publicKey as PublicKey, 
-        sendTransaction
-      );
-    } catch(e) {
+      await createAndSendTx(ixs, connection, publicKey as PublicKey, sendTransaction);
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   useEffect(() => {
-    setProvider(getProvider(connection, wallet as Wallet))
+    setProvider(getProvider(connection, wallet as Wallet));
   }, [wallet, connection]);
-  
+
   return (
     <div>
-      {listings && 
+      {listings && (
         <div>
           {listings.map((l) => {
             return (
-              <button 
-                key={l.mint.toString()} 
-                onClick={() => { 
+              <button
+                key={l.mint.toString()}
+                onClick={() => {
                   l.seller.toString() === publicKey?.toString()
-                    ? delist(l.mint) 
+                    ? delist(l.mint)
                     : buy(l.mint, l.seller);
                 }}
-                className="hover:underline"
-              >
+                className="hover:underline">
                 {l.mint.toString()}
               </button>
             );
           })}
         </div>
-      }
+      )}
     </div>
   );
 };

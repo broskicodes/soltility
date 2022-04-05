@@ -11,14 +11,37 @@ use {
   crate::state::*,
 };
 
-declare_id!("HjCRC2HTEsHpRXBeCKCKMLrNVifv9BcZCBBWf3Eqxo4M");
+declare_id!("22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx");
 
 #[program]
 pub mod bo_marketplace {
   use super::*;
 
+  pub fn initialize_master_vault(
+    ctx: Context<InitializeMasterVault>,
+    fee: u16,
+  ) -> Result<()> {
+    process_initialize_master_vault::process_initialize_master_vault(
+      ctx,
+      fee,
+    )
+  }
+
+  pub fn initialize_organization(
+    ctx: Context<InitializeOrganization>,
+    org_name: String,
+    custom_vault: Option<Pubkey>,
+  ) -> Result<()> {
+    process_initialize_organization::process_initialize_organization(
+      ctx,
+      org_name,
+      custom_vault,
+    )
+  }
+
   pub fn initialize_marketplace(
     ctx: Context<InitializeMarketplace>,
+    _org_name: String,
     token_type: TokenType,
     fee: u16,
     is_mutable: bool,
@@ -33,7 +56,6 @@ pub mod bo_marketplace {
 
   pub fn register_standard_collection(
     ctx: Context<RegisterStandardCollection>,
-    _token_type: TokenType,
     version: CandyMachineVersion,
     name: String,
   ) -> Result<()> {
@@ -46,6 +68,7 @@ pub mod bo_marketplace {
   
   pub fn list_nft(
     ctx: Context<ListNft>,
+    _org_name: String,
     token_type: TokenType,
     price: u64,
   ) -> Result<()> {
@@ -58,17 +81,17 @@ pub mod bo_marketplace {
 
   pub fn delist_nft(
     ctx: Context<DelistNft>,
+    _org_name: String,
     _token_type: TokenType,
-    escrow_nonce: u8,
   ) -> Result<()> {    
     process_delist_nft::process_delist_nft(
       ctx,
-      escrow_nonce,
     )
   }
 
   pub fn buy_nft<'a, 'b, 'c, 'info>(
     ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
+    _org_name: String,
     _token_type: TokenType,
   ) -> Result<()> {    
     process_buy_nft::process_buy_nft(
@@ -90,6 +113,7 @@ pub mod bo_marketplace {
 
   pub fn list_token(
     ctx: Context<ListToken>,
+    _org_name: String,
     token_type: TokenType,
     price_per_token: u64,
     amount: u64,
@@ -104,17 +128,17 @@ pub mod bo_marketplace {
 
   pub fn delist_token(
     ctx: Context<DelistToken>,
+    _org_name: String,
     _token_type: TokenType,
-    escrow_nonce: u8,
   ) -> Result<()> {    
     process_delist_token::process_delist_token(
       ctx,
-      escrow_nonce,
     )
   }
 
   pub fn buy_token<'a, 'b, 'c, 'info>(
     ctx: Context<'a, 'b, 'c, 'info, BuyToken<'info>>,
+    _org_name: String,
     _token_type: TokenType,
     amount: u64,
   ) -> Result<()> {    

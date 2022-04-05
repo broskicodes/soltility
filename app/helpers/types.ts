@@ -23,10 +23,7 @@ export interface NftData {
 export interface CollectionData {
   version: CandyMachineVersion,
   collectionId: PublicKey,
-  size: number,
   name: string
-  // hash_list: Option<ey>,
-  hashListLink?: string,
 };
 
 export interface EscrowAccountData {

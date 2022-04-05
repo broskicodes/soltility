@@ -124,6 +124,11 @@ pub fn process_buy_token<'a, 'b, 'c, 'info>(
       is_signer: false,
       is_writable: false,
     });
+    close_ix.accounts.push(AccountMeta {
+      pubkey: *org_vault_info.key,
+      is_signer: false,
+      is_writable: false,
+    });
 
     invoke_signed(
       &close_ix,
@@ -131,7 +136,9 @@ pub fn process_buy_token<'a, 'b, 'c, 'info>(
         ctx.accounts.escrow_account.to_account_info(),
         ctx.accounts.escrow_token_account.to_account_info(),
         ctx.accounts.seller.to_account_info(),
+
         ctx.accounts.master_vault.to_account_info(),
+        org_vault_info,
       ],
       &[
         &[

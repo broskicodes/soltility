@@ -79,7 +79,7 @@ pub struct InitializeMarketplace<'info> {
     bump,
   )]
   pub organization: Box<Account<'info, Organization>>,
-  pub organization_authority: Signer<'info>,
+  pub org_authority: Signer<'info>,
   pub update_authority: Signer<'info>,
   #[account(mut)]
   pub payer: Signer<'info>,
@@ -87,10 +87,6 @@ pub struct InitializeMarketplace<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(
-  org_name: String,
-  token_type: TokenType,
-)]
 pub struct RegisterStandardCollection<'info> {
   #[account(
     init, payer = payer, space = 8+1+32+(4+32)+256,
@@ -342,6 +338,7 @@ pub struct BuyNft<'info> {
   )]
   pub organization: Box<Account<'info, Organization>>,
   #[account(
+    mut,
     seeds = [
       b"organization-vault".as_ref(),
       organization.key().as_ref(),
@@ -610,6 +607,7 @@ pub struct BuyToken<'info> {
   )]
   pub organization: Box<Account<'info, Organization>>,
   #[account(
+    mut,
     seeds = [
       b"organization-vault".as_ref(),
       organization.key().as_ref(),

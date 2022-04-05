@@ -60,7 +60,7 @@ export const createAndSendTx = async (
     { signers: signers }
   );
 
-  console.log(sig);
+  console.log("https://explorer.solana.com/tx/"+sig+"?cluster=devnet");
 
   return sig;
 }

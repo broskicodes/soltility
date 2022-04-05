@@ -12,9 +12,7 @@ export const Navbar: FC = () => {
   return (
     <nav id="nav" className="z-20 w-full border-b-gray-200 py-2 bg-gray-300">
       <div className="w-full container mx-auto flex flex-wrap justify-between">
-        <div
-          id="logo"
-          className="my-auto md:flex text-slate-900 dark:text-white">
+        <div id="logo" className="my-auto md:flex text-slate-900 dark:text-white">
           {/* <Link href="/"> */}
           <a href="/" className="ml-2 font-mono text-2xl">
             Home

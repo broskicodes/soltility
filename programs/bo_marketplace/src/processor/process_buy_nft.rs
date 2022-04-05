@@ -143,8 +143,14 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
 
   // Ridiculous hack to fix "sum of account balances before and 
   // after instruction do not match" error
+
   close_ix.accounts.push(AccountMeta {
     pubkey: ctx.accounts.master_vault.key(),
+    is_signer: false,
+    is_writable: false,
+  });
+  close_ix.accounts.push(AccountMeta {
+    pubkey: *org_vault_info.key,
     is_signer: false,
     is_writable: false,
   });
@@ -164,7 +170,9 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
         ctx.accounts.escrow_account.to_account_info(),
         ctx.accounts.escrow_token_account.to_account_info(),
         ctx.accounts.seller.to_account_info(),
+
         ctx.accounts.master_vault.to_account_info(),
+        org_vault_info,
       ],
       // Continuation of hack
       creator_infos.as_slice(),

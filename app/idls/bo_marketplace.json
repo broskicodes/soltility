@@ -3,6 +3,79 @@
   "name": "bo_marketplace",
   "instructions": [
     {
+      "name": "initializeMasterVault",
+      "accounts": [
+        {
+          "name": "masterVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "fee",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "initializeOrganization",
+      "accounts": [
+        {
+          "name": "organization",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "orgVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "customVault",
+          "type": {
+            "option": "publicKey"
+          }
+        }
+      ]
+    },
+    {
       "name": "initializeMarketplace",
       "accounts": [
         {
@@ -11,9 +84,14 @@
           "isSigner": false
         },
         {
-          "name": "marketplaceVault",
-          "isMut": true,
+          "name": "organization",
+          "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "orgAuthority",
+          "isMut": false,
+          "isSigner": true
         },
         {
           "name": "updateAuthority",
@@ -33,6 +111,10 @@
       ],
       "args": [
         {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
           "name": "tokenType",
           "type": {
             "defined": "TokenType"
@@ -40,7 +122,7 @@
         },
         {
           "name": "fee",
-          "type": "u8"
+          "type": "u16"
         },
         {
           "name": "isMutable",
@@ -54,11 +136,6 @@
         {
           "name": "collection",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "marketplace",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -88,12 +165,6 @@
         }
       ],
       "args": [
-        {
-          "name": "tokenType",
-          "type": {
-            "defined": "TokenType"
-          }
-        },
         {
           "name": "version",
           "type": {
@@ -145,6 +216,11 @@
           "isSigner": false
         },
         {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "seller",
           "isMut": true,
           "isSigner": true
@@ -176,6 +252,10 @@
         }
       ],
       "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
         {
           "name": "tokenType",
           "type": {
@@ -222,6 +302,11 @@
           "isSigner": false
         },
         {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "seller",
           "isMut": true,
           "isSigner": true
@@ -244,14 +329,14 @@
       ],
       "args": [
         {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
           "name": "tokenType",
           "type": {
             "defined": "TokenType"
           }
-        },
-        {
-          "name": "escrowNonce",
-          "type": "u8"
         }
       ]
     },
@@ -294,6 +379,16 @@
           "isSigner": false
         },
         {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "orgVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "buyer",
           "isMut": true,
           "isSigner": true
@@ -304,7 +399,7 @@
           "isSigner": false
         },
         {
-          "name": "marketplaceVault",
+          "name": "masterVault",
           "isMut": true,
           "isSigner": false
         },
@@ -336,14 +431,14 @@
       ],
       "args": [
         {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
           "name": "tokenType",
           "type": {
             "defined": "TokenType"
           }
-        },
-        {
-          "name": "escrowNonce",
-          "type": "u8"
         }
       ]
     },
@@ -441,6 +536,11 @@
           "isSigner": false
         },
         {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "seller",
           "isMut": true,
           "isSigner": true
@@ -467,6 +567,10 @@
         }
       ],
       "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
         {
           "name": "tokenType",
           "type": {
@@ -517,6 +621,11 @@
           "isSigner": false
         },
         {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "seller",
           "isMut": true,
           "isSigner": true
@@ -544,14 +653,14 @@
       ],
       "args": [
         {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
           "name": "tokenType",
           "type": {
             "defined": "TokenType"
           }
-        },
-        {
-          "name": "escrowNonce",
-          "type": "u8"
         }
       ]
     },
@@ -589,6 +698,16 @@
           "isSigner": false
         },
         {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "orgVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "buyer",
           "isMut": true,
           "isSigner": true
@@ -599,7 +718,7 @@
           "isSigner": false
         },
         {
-          "name": "marketplaceVault",
+          "name": "masterVault",
           "isMut": true,
           "isSigner": false
         },
@@ -626,14 +745,14 @@
       ],
       "args": [
         {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
           "name": "tokenType",
           "type": {
             "defined": "TokenType"
           }
-        },
-        {
-          "name": "escrowNonce",
-          "type": "u8"
         },
         {
           "name": "amount",
@@ -643,6 +762,62 @@
     }
   ],
   "accounts": [
+    {
+      "name": "MasterVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "fee",
+            "type": "u16"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Organization",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "customVault",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
     {
       "name": "Marketplace",
       "type": {
@@ -655,16 +830,29 @@
             }
           },
           {
+            "name": "organization",
+            "type": "publicKey"
+          },
+          {
             "name": "updateAuthority",
             "type": "publicKey"
           },
           {
             "name": "fee",
-            "type": "u8"
+            "type": "u16"
           },
           {
             "name": "isMutable",
             "type": "bool"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
           }
         ]
       }
@@ -687,6 +875,15 @@
           {
             "name": "name",
             "type": "string"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
           }
         ]
       }
@@ -733,6 +930,15 @@
           {
             "name": "pricePerToken",
             "type": "u64"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
           }
         ]
       }
@@ -801,16 +1007,36 @@
     },
     {
       "code": 6006,
-      "name": "InvalidMarketplaceFee",
-      "msg": "Invalid marketplace fee percentage."
+      "name": "InvalidFee",
+      "msg": "Invalid fee, must be in basis points."
     },
     {
       "code": 6007,
       "name": "WrongMarketplace",
       "msg": "Attempting to list token/nft on incorrect marketplace."
+    },
+    {
+      "code": 6008,
+      "name": "MissingAccountInfo",
+      "msg": "Missing required account account info to execute instruction."
+    },
+    {
+      "code": 6009,
+      "name": "InvalidAccountInfo",
+      "msg": "Passed vault account info does not match key argument passed to instruction."
+    },
+    {
+      "code": 6010,
+      "name": "IncorrectOrgAuthority",
+      "msg": "Signing organization authority does not match authority on record."
+    },
+    {
+      "code": 6011,
+      "name": "MissingBump",
+      "msg": "A bump required for instruction processing is missing."
     }
   ],
   "metadata": {
-    "address": "9XTHyBBSDBVxnDm8yMv4qNHDYbaEMAmaVBfJoMYJX4ui"
+    "address": "22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx"
   }
 }

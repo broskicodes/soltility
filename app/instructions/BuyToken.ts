@@ -1,6 +1,13 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
-import { getCollectionPDA, getEscrowPDA, getEscrowTokenPDA, getMarketplacePDA, getMarketplaceVaultPDA } from "@helpers/pdas";
-import { NftData, TokenType } from "@helpers/types";
+import { 
+  getEscrowPDA, 
+  getEscrowTokenPDA, 
+  getMarketplacePDA, 
+  getMasterVaultPDA, 
+  getOrganizationPDA,
+  getOrganizationVaultPDA
+} from "@helpers/pdas";
+import { TokenType } from "@helpers/types";
 import { Provider, BN } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -11,33 +18,34 @@ export const BuyToken = async (
   mint: PublicKey,
   seller: PublicKey,
   amount: number,
+  orgName: string,
 ) => {
   const program = getProgram(provider);
   const { publicKey } = provider.wallet;
-
   const metadata = await Metadata.getPDA(mint);
   const decimals = ((await provider.connection.getParsedAccountInfo(mint)).value?.data as ParsedAccountData).parsed.info.decimals;
 
-  const [escrowAccount, b1] = await getEscrowPDA(
-    TokenType.Fungible,
-    metadata,
-    mint,
-    seller,
-  );
-  const [marketplaceVault, b2] = await getMarketplaceVaultPDA(TokenType.Fungible);
-
   const ix = await program.methods
     .buyToken(
+      orgName,
       tokenTypeEnumToAnchorEnum(TokenType.Fungible),
-      b1,
       new BN(amount * Math.pow(10, decimals)),
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.Fungible),
+      organization: await getOrganizationPDA(orgName),
+      orgVault: await getOrganizationVaultPDA(orgName),
+      marketplace: await getMarketplacePDA(orgName, TokenType.Fungible),
       tokenMint: mint,
       metadataAccount: metadata,
-      escrowAccount: escrowAccount,
+      escrowAccount: await getEscrowPDA(
+        orgName,
+        TokenType.Fungible,
+        metadata,
+        mint,
+        seller,
+      ),
       escrowTokenAccount: await getEscrowTokenPDA(
+        orgName,
         TokenType.Fungible,
         metadata,
         mint,
@@ -49,7 +57,7 @@ export const BuyToken = async (
         mint,
         publicKey,
       ),
-      marketplaceVault: marketplaceVault,
+      masterVault: await getMasterVaultPDA(),
       seller: seller,
     })
     .instruction();

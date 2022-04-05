@@ -17,7 +17,7 @@ pub fn process_initialize_marketplace(
     return Err(error!(MarketplaceError::InvalidFee));
   }
 
-  if *ctx.accounts.organization_authority.key != ctx.accounts.organization.authority {
+  if *ctx.accounts.org_authority.key != ctx.accounts.organization.authority {
     return Err(error!(MarketplaceError::IncorrectOrgAuthority))
   }
 
