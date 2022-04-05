@@ -1,7 +1,7 @@
 [features]
 seeds = false
 [programs.devnet]
-bo_marketplace = "9XTHyBBSDBVxnDm8yMv4qNHDYbaEMAmaVBfJoMYJX4ui"
+bo_marketplace = "HjCRC2HTEsHpRXBeCKCKMLrNVifv9BcZCBBWf3Eqxo4M"
 
 [registry]
 url = "https://anchor.projectserum.com"

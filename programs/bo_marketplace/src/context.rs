@@ -20,7 +20,7 @@ pub struct InitializeMasterVault<'info> {
     ],
     bump,
   )]
-  pub master_vault: Account<'info, MasterVault>,
+  pub master_vault: Box<Account<'info, MasterVault>>,
   pub authority: Signer<'info>,
   #[account(mut)]
   pub payer: Signer<'info>,
@@ -38,7 +38,7 @@ pub struct InitializeOrganization<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(
     init, payer = payer, space = 0,
     seeds = [
@@ -47,6 +47,7 @@ pub struct InitializeOrganization<'info> {
     ],
     bump,
   )]
+  /// CHECK: Organization's vault account, no data
   pub org_vault: UncheckedAccount<'info>,
   pub authority: Signer<'info>,
   #[account(mut)]
@@ -69,7 +70,7 @@ pub struct InitializeMarketplace<'info> {
     ],
     bump,
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -77,7 +78,7 @@ pub struct InitializeMarketplace<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   pub organization_authority: Signer<'info>,
   pub update_authority: Signer<'info>,
   #[account(mut)]
@@ -99,7 +100,7 @@ pub struct RegisterStandardCollection<'info> {
     ],
     bump,
   )]
-  pub collection: Account<'info, Collection>,
+  pub collection: Box<Account<'info, Collection>>,
   #[account(mut)]
   pub payer: Signer<'info>,
   pub nft_mint: Account<'info, Mint>,
@@ -173,7 +174,7 @@ pub struct ListNft<'info> {
     ],
     bump,
   )]
-  pub collection: Account<'info, Collection>,
+  pub collection: Box<Account<'info, Collection>>,
   #[account(
     seeds = [
       b"marketplace".as_ref(),
@@ -182,7 +183,7 @@ pub struct ListNft<'info> {
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -190,7 +191,7 @@ pub struct ListNft<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
@@ -260,7 +261,7 @@ pub struct DelistNft<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
@@ -339,7 +340,7 @@ pub struct BuyNft<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(
     seeds = [
       b"organization-vault".as_ref(),
@@ -361,7 +362,7 @@ pub struct BuyNft<'info> {
     ],
     bump,
   )]
-  pub master_vault: Account<'info, MasterVault>,
+  pub master_vault: Box<Account<'info, MasterVault>>,
   /// CHECK: Candy Machine ID or Collection ID
   pub collection_id: UncheckedAccount<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -465,7 +466,7 @@ pub struct ListToken<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -528,7 +529,7 @@ pub struct DelistToken<'info> {
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -536,7 +537,7 @@ pub struct DelistToken<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -599,7 +600,7 @@ pub struct BuyToken<'info> {
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -607,7 +608,7 @@ pub struct BuyToken<'info> {
     ],
     bump,
   )]
-  pub organization: Account<'info, Organization>,
+  pub organization: Box<Account<'info, Organization>>,
   #[account(
     seeds = [
       b"organization-vault".as_ref(),
@@ -629,7 +630,7 @@ pub struct BuyToken<'info> {
     ],
     bump,
   )]
-  pub master_vault: Account<'info, MasterVault>,
+  pub master_vault: Box<Account<'info, MasterVault>>,
   pub rent: Sysvar<'info, Rent>,
   pub token_program: Program<'info, Token>,
   pub associated_token_program: Program<'info, AssociatedToken>,

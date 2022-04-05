@@ -23,7 +23,7 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
   ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
-  let escrow_nonce = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
 
   if escrow_account.seller != *ctx.accounts.seller.key {
     return Err(error!(MarketplaceError::UnknownSeller));
@@ -128,7 +128,7 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
         ctx.accounts.collection.key().as_ref(),
         ctx.accounts.nft_mint.key().as_ref(),
         ctx.accounts.seller.key().as_ref(),
-        &[escrow_nonce],
+        &[escrow_bump],
       ],
     ],
   )?;
@@ -176,7 +176,7 @@ pub fn process_buy_nft<'a, 'b, 'c, 'info>(
         ctx.accounts.collection.key().as_ref(),
         ctx.accounts.nft_mint.key().as_ref(),
         ctx.accounts.seller.key().as_ref(),
-        &[escrow_nonce],
+        &[escrow_bump],
       ],
     ],
   )?;

@@ -11,7 +11,7 @@ use {
   crate::state::*,
 };
 
-declare_id!("9XTHyBBSDBVxnDm8yMv4qNHDYbaEMAmaVBfJoMYJX4ui");
+declare_id!("HjCRC2HTEsHpRXBeCKCKMLrNVifv9BcZCBBWf3Eqxo4M");
 
 #[program]
 pub mod bo_marketplace {
