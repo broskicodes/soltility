@@ -70,11 +70,9 @@ pub mod bo_marketplace {
   pub fn buy_nft<'a, 'b, 'c, 'info>(
     ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
     _token_type: TokenType,
-    escrow_nonce: u8,
   ) -> Result<()> {    
     process_buy_nft::process_buy_nft(
       ctx,
-      escrow_nonce,
     )
   }
 
@@ -118,12 +116,10 @@ pub mod bo_marketplace {
   pub fn buy_token<'a, 'b, 'c, 'info>(
     ctx: Context<'a, 'b, 'c, 'info, BuyToken<'info>>,
     _token_type: TokenType,
-    escrow_nonce: u8,
     amount: u64,
   ) -> Result<()> {    
     process_buy_token::process_buy_token(
       ctx,
-      escrow_nonce,
       amount,
     )
   }

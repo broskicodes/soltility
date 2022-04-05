@@ -78,6 +78,7 @@ pub struct InitializeMarketplace<'info> {
     bump,
   )]
   pub organization: Account<'info, Organization>,
+  pub organization_authority: Signer<'info>,
   pub update_authority: Signer<'info>,
   #[account(mut)]
   pub payer: Signer<'info>,
@@ -339,6 +340,15 @@ pub struct BuyNft<'info> {
     bump,
   )]
   pub organization: Account<'info, Organization>,
+  #[account(
+    seeds = [
+      b"organization-vault".as_ref(),
+      organization.key().as_ref(),
+    ],
+    bump,
+  )]
+  /// CHECK: Organization's vault account, no data
+  pub org_vault: UncheckedAccount<'info>,
   #[account(mut)]
   pub buyer: Signer<'info>,
   #[account(mut)]
@@ -347,13 +357,11 @@ pub struct BuyNft<'info> {
   #[account(
     mut,
     seeds = [
-      b"marketplace-vault".as_ref(),
-      marketplace.key().as_ref(),
+      b"master-vault".as_ref(),
     ],
     bump,
   )]
-  /// CHECK: Vault account for transfering funds, no data
-  pub marketplace_vault: UncheckedAccount<'info>,
+  pub master_vault: Account<'info, MasterVault>,
   /// CHECK: Candy Machine ID or Collection ID
   pub collection_id: UncheckedAccount<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -600,6 +608,15 @@ pub struct BuyToken<'info> {
     bump,
   )]
   pub organization: Account<'info, Organization>,
+  #[account(
+    seeds = [
+      b"organization-vault".as_ref(),
+      organization.key().as_ref(),
+    ],
+    bump,
+  )]
+  /// CHECK: Organization's vault account, no data
+  pub org_vault: UncheckedAccount<'info>,
   #[account(mut)]
   pub buyer: Signer<'info>,
   #[account(mut)]
@@ -608,13 +625,11 @@ pub struct BuyToken<'info> {
   #[account(
     mut,
     seeds = [
-      b"marketplace-vault".as_ref(),
-      marketplace.key().as_ref(),
+      b"master-vault".as_ref(),
     ],
     bump,
   )]
-  /// CHECK: Vault account for transfering funds, no data
-  pub marketplace_vault: UncheckedAccount<'info>,
+  pub master_vault: Account<'info, MasterVault>,
   pub rent: Sysvar<'info, Rent>,
   pub token_program: Program<'info, Token>,
   pub associated_token_program: Program<'info, AssociatedToken>,

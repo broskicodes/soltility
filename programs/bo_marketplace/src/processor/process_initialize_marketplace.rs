@@ -14,12 +14,17 @@ pub fn process_initialize_marketplace(
   let marketplace = &mut ctx.accounts.marketplace;
 
   if fee > 10000 {
-    return Err(error!(MarketplaceError::InvalidMarketplaceFee));
+    return Err(error!(MarketplaceError::InvalidFee));
+  }
+
+  if *ctx.accounts.organization_authority.key != ctx.accounts.organization.authority {
+    return Err(error!(MarketplaceError::IncorrectOrgAuthority))
   }
 
   marketplace.fee = fee;
   marketplace.token_type = token_type;
   marketplace.update_authority = *ctx.accounts.update_authority.key;
+  marketplace.organization = ctx.accounts.organization.key();
   marketplace.is_mutable = is_mutable;
 
   Ok(())
