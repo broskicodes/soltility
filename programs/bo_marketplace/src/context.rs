@@ -12,29 +12,74 @@ use {
 };
 
 #[derive(Accounts)]
+pub struct InitializeMasterVault<'info> {
+  #[account(
+    init, payer = payer, space = 8+32+2+256,
+    seeds = [
+      b"master-vault".as_ref()
+    ],
+    bump,
+  )]
+  pub master_vault: Box<Account<'info, MasterVault>>,
+  pub authority: Signer<'info>,
+  #[account(mut)]
+  pub payer: Signer<'info>,
+  pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(org_name: String)]
+pub struct InitializeOrganization<'info> {
+  #[account(
+    init, payer = payer, space = 8+32+(4+32)+(4+32)+256,
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
+  #[account(
+    init, payer = payer, space = 0,
+    seeds = [
+      b"organization-vault".as_ref(),
+      organization.key().as_ref(),
+    ],
+    bump,
+  )]
+  /// CHECK: Organization's vault account, no data
+  pub org_vault: UncheckedAccount<'info>,
+  pub authority: Signer<'info>,
+  #[account(mut)]
+  pub payer: Signer<'info>,
+  pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
 #[instruction(
+  org_name: String,
   token_type: TokenType,
 )]
 pub struct InitializeMarketplace<'info> {
   #[account(
-    init, payer = payer, space = 8+1+32+1+1,
+    init, payer = payer, space = 8+1+32+32+2+1+256,
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type.clone() as u8],
     ],
     bump,
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
   #[account(
-    init, payer = payer, space = 0,
     seeds = [
-      b"marketplace-vault".as_ref(),
-      marketplace.key().as_ref(),
+      b"organization".as_ref(),
+      org_name.as_bytes(),
     ],
     bump,
   )]
-  /// CHECK: Vault account for transfering funds, no data
-  pub marketplace_vault: UncheckedAccount<'info>,
+  pub organization: Box<Account<'info, Organization>>,
+  pub org_authority: Signer<'info>,
   pub update_authority: Signer<'info>,
   #[account(mut)]
   pub payer: Signer<'info>,
@@ -42,26 +87,16 @@ pub struct InitializeMarketplace<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(token_type: TokenType)]
 pub struct RegisterStandardCollection<'info> {
   #[account(
-    init, payer = payer, space = 8+1+32+(4+32),
+    init, payer = payer, space = 8+1+32+(4+32)+256,
     seeds = [
       b"collection".as_ref(),
-      marketplace.key().as_ref(),
       collection_id.key.as_ref(),
     ],
     bump,
   )]
-  pub collection: Account<'info, Collection>,
-  #[account(
-    seeds = [
-      b"marketplace".as_ref(),
-      &[token_type as u8],
-    ],
-    bump
-  )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub collection: Box<Account<'info, Collection>>,
   #[account(mut)]
   pub payer: Signer<'info>,
   pub nft_mint: Account<'info, Mint>,
@@ -82,10 +117,13 @@ pub struct RegisterStandardCollection<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(token_type: TokenType)]
+#[instruction(
+  org_name: String,
+  token_type: TokenType,
+)]
 pub struct ListNft<'info> {
   #[account(
-    init_if_needed, payer = seller, space = 8+1+32+(4+32)+32+32+32+8, 
+    init_if_needed, payer = seller, space = 8+1+32+(4+32)+32+32+32+8+256, 
     seeds = [
       b"escrow".as_ref(),
       marketplace.key().as_ref(),
@@ -104,7 +142,7 @@ pub struct ListNft<'info> {
       b"token-account".as_ref(),
       escrow_account.key().as_ref(),
     ],
-    bump
+    bump,
   )]
   pub escrow_token_account: Account<'info, TokenAccount>,
   pub nft_mint: Account<'info, Mint>,
@@ -128,20 +166,28 @@ pub struct ListNft<'info> {
   #[account(
     seeds = [
       b"collection".as_ref(),
-      marketplace.key().as_ref(),
-      collection_id.key().as_ref(),
+      collection_id.key.as_ref(),
     ],
     bump,
   )]
-  pub collection: Account<'info, Collection>,
+  pub collection: Box<Account<'info, Collection>>,
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type as u8],
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
+  #[account(
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
@@ -154,8 +200,8 @@ pub struct ListNft<'info> {
 
 #[derive(Accounts)]
 #[instruction(
+  org_name: String,
   token_type: TokenType,
-  escrow_nonce: u8
 )]
 pub struct DelistNft<'info> {
   #[account(
@@ -167,7 +213,7 @@ pub struct DelistNft<'info> {
       nft_mint.key().as_ref(),
       seller.key().as_ref(),
     ],
-    bump = escrow_nonce,
+    bump,
     close = seller,
   )]
   pub escrow_account: Box<Account<'info, Escrow>>,
@@ -190,8 +236,7 @@ pub struct DelistNft<'info> {
   #[account(
     seeds = [
       b"collection".as_ref(),
-      marketplace.key().as_ref(),
-      collection_id.key().as_ref(),
+      collection_id.key.as_ref(),
     ],
     bump,
   )]
@@ -199,11 +244,20 @@ pub struct DelistNft<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type as u8],
     ],
-    bump
+    bump,
   )]
   pub marketplace: Box<Account<'info, Marketplace>>,
+  #[account(
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
@@ -214,8 +268,8 @@ pub struct DelistNft<'info> {
 
 #[derive(Accounts)]
 #[instruction(
+  org_name: String,
   token_type: TokenType,
-  escrow_nonce: u8,
 )]
 pub struct BuyNft<'info> {
   #[account(
@@ -227,7 +281,7 @@ pub struct BuyNft<'info> {
       nft_mint.key().as_ref(),
       seller.key().as_ref(),
     ],
-    bump = escrow_nonce,
+    bump,
     close = seller,
   )]
   pub escrow_account: Box<Account<'info, Escrow>>,
@@ -261,8 +315,7 @@ pub struct BuyNft<'info> {
   #[account(
     seeds = [
       b"collection".as_ref(),
-      marketplace.key().as_ref(),
-      collection_id.key().as_ref(),
+      collection_id.key.as_ref(),
     ],
     bump,
   )]
@@ -270,11 +323,30 @@ pub struct BuyNft<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type as u8],
     ],
     bump
   )]
   pub marketplace: Box<Account<'info, Marketplace>>,
+  #[account(
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
+  #[account(
+    mut,
+    seeds = [
+      b"organization-vault".as_ref(),
+      organization.key().as_ref(),
+    ],
+    bump,
+  )]
+  /// CHECK: Organization's vault account, no data
+  pub org_vault: UncheckedAccount<'info>,
   #[account(mut)]
   pub buyer: Signer<'info>,
   #[account(mut)]
@@ -283,13 +355,11 @@ pub struct BuyNft<'info> {
   #[account(
     mut,
     seeds = [
-      b"marketplace-vault".as_ref(),
-      marketplace.key().as_ref(),
+      b"master-vault".as_ref(),
     ],
     bump,
   )]
-  /// CHECK: Vault account for transfering funds, no data
-  pub marketplace_vault: UncheckedAccount<'info>,
+  pub master_vault: Box<Account<'info, MasterVault>>,
   /// CHECK: Candy Machine ID or Collection ID
   pub collection_id: UncheckedAccount<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -331,10 +401,13 @@ pub struct CreateTokenMetadata<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(token_type: TokenType)]
+#[instruction(
+  org_name: String,
+  token_type: TokenType,
+)]
 pub struct ListToken<'info> {
   #[account(
-    init, payer = seller, space = 8+1+32+(4+32)+32+32+32+8, 
+    init, payer = seller, space = 8+1+32+(4+32)+32+32+32+8+256, 
     seeds = [
       b"escrow".as_ref(),
       marketplace.key().as_ref(),
@@ -377,11 +450,20 @@ pub struct ListToken<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type as u8],
     ],
     bump
   )]
   pub marketplace: Box<Account<'info, Marketplace>>,
+  #[account(
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -392,8 +474,8 @@ pub struct ListToken<'info> {
 
 #[derive(Accounts)]
 #[instruction(
+  org_name: String,
   token_type: TokenType,
-  escrow_nonce: u8,
 )]
 pub struct DelistToken<'info> {
   #[account(
@@ -405,7 +487,7 @@ pub struct DelistToken<'info> {
       token_mint.key().as_ref(),
       seller.key().as_ref(),
     ],
-    bump = escrow_nonce,
+    bump,
     close = seller,
   )]
   pub escrow_account: Box<Account<'info, Escrow>>,
@@ -439,11 +521,20 @@ pub struct DelistToken<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type as u8],
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
+  #[account(
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
   #[account(mut)]
   pub seller: Signer<'info>,
   pub rent: Sysvar<'info, Rent>,
@@ -454,8 +545,8 @@ pub struct DelistToken<'info> {
 
 #[derive(Accounts)]
 #[instruction(
+  org_name: String,
   token_type: TokenType,
-  escrow_nonce: u8,
 )]
 pub struct BuyToken<'info> {
   #[account(
@@ -467,7 +558,7 @@ pub struct BuyToken<'info> {
       token_mint.key().as_ref(),
       seller.key().as_ref(),
     ],
-    bump = escrow_nonce,
+    bump,
     // close = seller,
   )]
   pub escrow_account: Box<Account<'info, Escrow>>,
@@ -501,11 +592,30 @@ pub struct BuyToken<'info> {
   #[account(
     seeds = [
       b"marketplace".as_ref(),
+      organization.key().as_ref(),
       &[token_type as u8],
     ],
     bump
   )]
-  pub marketplace: Account<'info, Marketplace>,
+  pub marketplace: Box<Account<'info, Marketplace>>,
+  #[account(
+    seeds = [
+      b"organization".as_ref(),
+      org_name.as_bytes(),
+    ],
+    bump,
+  )]
+  pub organization: Box<Account<'info, Organization>>,
+  #[account(
+    mut,
+    seeds = [
+      b"organization-vault".as_ref(),
+      organization.key().as_ref(),
+    ],
+    bump,
+  )]
+  /// CHECK: Organization's vault account, no data
+  pub org_vault: UncheckedAccount<'info>,
   #[account(mut)]
   pub buyer: Signer<'info>,
   #[account(mut)]
@@ -514,13 +624,11 @@ pub struct BuyToken<'info> {
   #[account(
     mut,
     seeds = [
-      b"marketplace-vault".as_ref(),
-      marketplace.key().as_ref(),
+      b"master-vault".as_ref(),
     ],
     bump,
   )]
-  /// CHECK: Vault account for transfering funds, no data
-  pub marketplace_vault: UncheckedAccount<'info>,
+  pub master_vault: Box<Account<'info, MasterVault>>,
   pub rent: Sysvar<'info, Rent>,
   pub token_program: Program<'info, Token>,
   pub associated_token_program: Program<'info, AssociatedToken>,

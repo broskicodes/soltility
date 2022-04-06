@@ -1,7 +1,7 @@
-import { candyMachineVersionToAnchorEnum, getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
-import { getCollectionPDA, getMarketplacePDA } from "@helpers/pdas";
-import { CandyMachineVersion, TokenType } from "@helpers/types";
-import { Provider, BN } from "@project-serum/anchor";
+import { candyMachineVersionToAnchorEnum, getProgram } from "@helpers/mixins";
+import { getCollectionPDA } from "@helpers/pdas";
+import { CandyMachineVersion } from "@helpers/types";
+import { Provider } from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
@@ -16,12 +16,10 @@ export const RegisterStandardCollection = async (
 
   const ix = await program.methods
     .registerStandardCollection(
-      tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       candyMachineVersionToAnchorEnum(candyMachineVersion),
       name,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.NonFungible),
       collectionId: collectionId,
       collection: await getCollectionPDA(collectionId),
       nftMint: nftMint,

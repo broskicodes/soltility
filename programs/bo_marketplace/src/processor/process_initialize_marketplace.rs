@@ -8,18 +8,23 @@ use {
 pub fn process_initialize_marketplace(
   ctx: Context<InitializeMarketplace>,
   token_type: TokenType,
-  fee: u8,
+  fee: u16,
   is_mutable: bool,
 ) -> Result<()> {
   let marketplace = &mut ctx.accounts.marketplace;
 
-  if fee > 100 {
-    return Err(error!(MarketplaceError::InvalidMarketplaceFee));
+  if fee > 10000 {
+    return Err(error!(MarketplaceError::InvalidFee));
+  }
+
+  if *ctx.accounts.org_authority.key != ctx.accounts.organization.authority {
+    return Err(error!(MarketplaceError::IncorrectOrgAuthority))
   }
 
   marketplace.fee = fee;
   marketplace.token_type = token_type;
   marketplace.update_authority = *ctx.accounts.update_authority.key;
+  marketplace.organization = ctx.accounts.organization.key();
   marketplace.is_mutable = is_mutable;
 
   Ok(())

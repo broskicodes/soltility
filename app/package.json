@@ -31,10 +31,21 @@
   "devDependencies": {
     "@types/node": "17.0.23",
     "@types/react": "17.0.42",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
     "autoprefixer": "^10.4.4",
     "eslint": "8.11.0",
-    "eslint-config-next": "12.1.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-next": "12.0.10",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.2",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "postcss": "^8.4.12",
+    "prettier": "^2.5.1",
     "tailwindcss": "^3.0.23",
     "typescript": "4.6.2"
   }

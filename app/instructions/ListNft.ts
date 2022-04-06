@@ -1,5 +1,11 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
-import { getCollectionPDA, getEscrowPDA, getEscrowTokenPDA, getMarketplacePDA } from "@helpers/pdas";
+import { 
+  getCollectionPDA, 
+  getEscrowPDA, 
+  getEscrowTokenPDA, 
+  getMarketplacePDA, 
+  getOrganizationPDA
+} from "@helpers/pdas";
 import { NftData, TokenType } from "@helpers/types";
 import { Provider, BN } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
@@ -9,7 +15,8 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 export const ListNft = async (
   provider: Provider,
   nft: NftData,
-  price: number,  
+  price: number,
+  orgName: string,
 ) => {
   const program = getProgram(provider);
   const { mint, collectionId } = nft;
@@ -19,22 +26,26 @@ export const ListNft = async (
 
   const ix = await program.methods
     .listNft(
+      orgName,
       tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
       new BN(price * LAMPORTS_PER_SOL),
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.NonFungible),
+      organization: await getOrganizationPDA(orgName),
+      marketplace: await getMarketplacePDA(orgName, TokenType.NonFungible),
       collectionId: collectionId,
       collection: collection,
       nftMint: mint,
       nftMetadataAccount: await Metadata.getPDA(mint),
-      escrowAccount: (await getEscrowPDA(
+      escrowAccount: await getEscrowPDA(
+        orgName,
         TokenType.NonFungible,
         collection,
         mint,
         publicKey,
-      ))[0],
+      ),
       escrowTokenAccount: await getEscrowTokenPDA(
+        orgName,
         TokenType.NonFungible,
         collection,
         mint,

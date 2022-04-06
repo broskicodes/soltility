@@ -1,7 +1,7 @@
-import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
+import { getProgram } from "@helpers/mixins";
 import { Provider, BN } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair } from "@solana/web3.js";
 import { TOKEN_METADATA_PROGRAM_ADDRESS } from "@helpers/constants";
 
 export const CreateTokenMetadata = async (

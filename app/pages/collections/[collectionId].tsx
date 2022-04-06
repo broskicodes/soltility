@@ -22,18 +22,18 @@ export const getStaticPaths = async () => {
 
   const paths = collections.map((col) => {
     return {
-      params: { collectionId: col.account.collectionId.toString() }
-    }
+      params: { collectionId: col.account.collectionId.toString() },
+    };
   });
 
   return {
     paths: paths,
     fallback: false,
   };
-}
+};
 
 export const getStaticProps = async (ctx: any) => {
-  const collectionId =  new PublicKey(ctx.params.collectionId);
+  const collectionId = new PublicKey(ctx.params.collectionId);
   const collection = await getCollectionPDA(collectionId);
   const provider = getProvider(
     new Connection(DEVNET_RPC_ENDPOINT),
@@ -49,7 +49,7 @@ export const getStaticProps = async (ctx: any) => {
     })
     .map((acc) => {
       return {
-        ...acc.account as EscrowAccountData,
+        ...(acc.account as EscrowAccountData),
         marketplace: acc.account.marketplace.toString(),
         collection: acc.account.collection.toString(),
         seller: acc.account.seller.toString(),
@@ -64,16 +64,16 @@ export const getStaticProps = async (ctx: any) => {
       data: listings,
     },
   };
-}
+};
 
 interface JSEscrowAccountData {
-  active: boolean,
-  marketplace: string,
-  collection: string,
-  seller: string,
-  mint: string,
-  tokenAccount: string,
-  pricePerToken: number,
+  active: boolean;
+  marketplace: string;
+  collection: string;
+  seller: string;
+  mint: string;
+  tokenAccount: string;
+  pricePerToken: number;
 }
 
 const CollectionPage: NextPage<{ data: JSEscrowAccountData[] }> = ({ data }) => {
@@ -91,16 +91,16 @@ const CollectionPage: NextPage<{ data: JSEscrowAccountData[] }> = ({ data }) => 
           seller: new PublicKey(d.seller),
           mint: new PublicKey(d.mint),
           tokenAccount: new PublicKey(d.tokenAccount),
-        }
+        };
       })
     );
-    console.log(router.query.collectionId);
-  }, []);
+    // console.log(router.query.collectionId);
+  }, [data]);
 
   return (
     <Page>
-      <CollectionList 
-        listings={listings as EscrowAccountData[]} 
+      <CollectionList
+        listings={listings as EscrowAccountData[]}
         collectionId={new PublicKey(router.query.collectionId as string)}
       />
     </Page>

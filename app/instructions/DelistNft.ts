@@ -1,42 +1,46 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
-import { getCollectionPDA, getEscrowPDA, getEscrowTokenPDA, getMarketplacePDA } from "@helpers/pdas";
-import { NftData, TokenType } from "@helpers/types";
-import { Provider, BN } from "@project-serum/anchor";
-import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
+import { 
+  getCollectionPDA, 
+  getEscrowPDA, 
+  getEscrowTokenPDA, 
+  getMarketplacePDA, 
+  getOrganizationPDA
+} from "@helpers/pdas";
+import { TokenType } from "@helpers/types";
+import { Provider } from "@project-serum/anchor";
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 
 export const DelistNft = async (
   provider: Provider,
   mint: PublicKey,
   collectionId: PublicKey,
+  orgName: string,
 ) => {
   const program = getProgram(provider);
-  // const { mint, collectionId } = nft;
   const { publicKey } = provider.wallet;
-
   const collection = await getCollectionPDA(collectionId);
-
-  const [escrowAccount, bump] = await getEscrowPDA(
-    TokenType.NonFungible,
-    collection,
-    mint,
-    publicKey,
-  );
-
 
   const ix = await program.methods
     .delistNft(
+      orgName,
       tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
-      bump,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(TokenType.NonFungible),
+      organization: await getOrganizationPDA(orgName),
+      marketplace: await getMarketplacePDA(orgName, TokenType.NonFungible),
       collectionId: collectionId,
       collection: collection,
       nftMint: mint,
-      escrowAccount: escrowAccount,
+      escrowAccount: await getEscrowPDA(
+        orgName,
+        TokenType.NonFungible,
+        collection,
+        mint,
+        publicKey,
+      ),
       escrowTokenAccount: await getEscrowTokenPDA(
+        orgName,
         TokenType.NonFungible,
         collection,
         mint,
