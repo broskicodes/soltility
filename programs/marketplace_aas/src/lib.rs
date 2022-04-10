@@ -14,7 +14,7 @@ use {
 declare_id!("22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx");
 
 #[program]
-pub mod bo_marketplace {
+pub mod marketplace_aas {
   use super::*;
 
   pub fn initialize_master_vault(
@@ -148,6 +148,3 @@ pub mod bo_marketplace {
     )
   }
 }
-
-
-
