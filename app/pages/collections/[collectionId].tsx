@@ -2,7 +2,7 @@ import { CollectionList } from '@components/CollectionList';
 import { Landing } from '@components/Landing';
 import { Page } from '@components/Page';
 import { DEVNET_RPC_ENDPOINT } from '@helpers/constants';
-import { getProgram, getProvider } from '@helpers/mixins';
+import { anchorTokenTypeToEnum, getProgram, getProvider } from '@helpers/mixins';
 import { getCollectionPDA } from '@helpers/pdas';
 import { CollectionData, EscrowAccountData } from '@helpers/types';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
@@ -68,6 +68,7 @@ export const getStaticProps = async (ctx: any) => {
 
 interface JSEscrowAccountData {
   active: boolean;
+  tokenType: Object,
   marketplace: string;
   collection: string;
   seller: string;
@@ -86,6 +87,7 @@ const CollectionPage: NextPage<{ data: JSEscrowAccountData[] }> = ({ data }) => 
       data.map((d) => {
         return {
           ...d,
+          tokenType: anchorTokenTypeToEnum(d.tokenType),
           marketplace: new PublicKey(d.marketplace),
           collection: new PublicKey(d.collection),
           seller: new PublicKey(d.seller),

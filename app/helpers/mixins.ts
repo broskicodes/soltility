@@ -97,3 +97,14 @@ export const tokenTypeEnumToAnchorEnum = (type: TokenType) => {
       throw new Error("Unsupported token type");
   }
 }
+
+export const anchorTokenTypeToEnum = (versionObj: Object) => {
+  switch(Object.keys(versionObj)[0]){
+    case 'fungible':
+      return TokenType.Fungible;
+    case 'nonFungible':
+      return TokenType.NonFungible;
+    default:
+      return TokenType.Other;
+  }
+}

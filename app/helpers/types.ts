@@ -20,6 +20,27 @@ export interface NftData {
   imageSrc: string,
 };
 
+export interface MasterVaultData {
+  authority: PublicKey,
+  // Basis points
+  fee: number,
+}
+
+export interface OrganizationData {
+  authority: PublicKey,
+  name: string,
+  custom_vault?: PublicKey,
+}
+
+export interface MarketplaceData {
+  token_type: TokenType,
+  organization: PublicKey,
+  update_authority: PublicKey,
+  // In basis points
+  fee: number,
+  is_mutable: boolean,
+}
+
 export interface CollectionData {
   version: CandyMachineVersion,
   collectionId: PublicKey,
@@ -27,7 +48,7 @@ export interface CollectionData {
 };
 
 export interface EscrowAccountData {
-  active: boolean,
+  tokenType: TokenType,
   marketplace: PublicKey,
   collection?: PublicKey,
   metadata?: PublicKey,

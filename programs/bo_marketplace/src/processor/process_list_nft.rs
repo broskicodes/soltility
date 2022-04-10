@@ -72,6 +72,7 @@ pub fn process_list_nft(
   escrow_account.token_account = ctx.accounts.escrow_token_account.key();
   escrow_account.price_per_token = price;
   escrow_account.token_type = TokenType::NonFungible;
+  escrow_account.marketplace = ctx.accounts.marketplace.key();
 
   Ok(())
 }
