@@ -1,6 +1,6 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::DelistNft,
+  crate::context::marketplace_context::DelistNft,
   crate::error::*,
   solana_program::{
     program::invoke_signed,
@@ -11,7 +11,7 @@ use {
   },
 };
 
-pub fn process_delist_nft(
+pub fn process(
   ctx: Context<DelistNft>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;

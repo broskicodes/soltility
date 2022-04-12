@@ -6,8 +6,14 @@ pub mod utils;
 
 use {
   anchor_lang::prelude::*,
-  crate::context::*,
-  crate::processor::*,
+  crate::context::{
+    marketplace_context::*,
+    *,
+  },
+  crate::processor::{
+    marketplace_ixs::*,
+    *,
+  },
   crate::state::*,
 };
 
@@ -21,7 +27,7 @@ pub mod marketplace_aas {
     ctx: Context<InitializeMasterVault>,
     fee: u16,
   ) -> Result<()> {
-    process_initialize_master_vault::process_initialize_master_vault(
+    process_initialize_master_vault::process(
       ctx,
       fee,
     )
@@ -32,7 +38,7 @@ pub mod marketplace_aas {
     org_name: String,
     custom_vault: Option<Pubkey>,
   ) -> Result<()> {
-    process_initialize_organization::process_initialize_organization(
+    process_initialize_organization::process(
       ctx,
       org_name,
       custom_vault,
@@ -46,7 +52,7 @@ pub mod marketplace_aas {
     fee: u16,
     is_mutable: bool,
   ) -> Result<()> {
-    process_initialize_marketplace::process_initialize_marketplace(
+    process_initialize_marketplace::process(
       ctx,
       token_type,
       fee,
@@ -59,7 +65,7 @@ pub mod marketplace_aas {
     version: CandyMachineVersion,
     name: String,
   ) -> Result<()> {
-    process_register_standard_collection::process_register_standard_collection(
+    process_register_standard_collection::process(
       ctx,
       version,
       name,
@@ -72,7 +78,7 @@ pub mod marketplace_aas {
     token_type: TokenType,
     price: u64,
   ) -> Result<()> {
-    process_list_nft::process_list_nft(
+    process_list_nft::process(
       ctx,
       token_type,
       price,
@@ -84,7 +90,7 @@ pub mod marketplace_aas {
     _org_name: String,
     _token_type: TokenType,
   ) -> Result<()> {    
-    process_delist_nft::process_delist_nft(
+    process_delist_nft::process(
       ctx,
     )
   }
@@ -94,7 +100,7 @@ pub mod marketplace_aas {
     _org_name: String,
     _token_type: TokenType,
   ) -> Result<()> {    
-    process_buy_nft::process_buy_nft(
+    process_buy_nft::process(
       ctx,
     )
   }
@@ -104,7 +110,7 @@ pub mod marketplace_aas {
     name: String,
     symbol: String,
   ) -> Result<()> {
-    process_create_token_metadata::process_create_token_metadata(
+    process_create_token_metadata::process(
       ctx,
       name,
       symbol,
@@ -118,7 +124,7 @@ pub mod marketplace_aas {
     price_per_token: u64,
     amount: u64,
   ) -> Result<()> {
-    process_list_token::process_list_token(
+    process_list_token::process(
       ctx,
       token_type,
       price_per_token,
@@ -131,7 +137,7 @@ pub mod marketplace_aas {
     _org_name: String,
     _token_type: TokenType,
   ) -> Result<()> {    
-    process_delist_token::process_delist_token(
+    process_delist_token::process(
       ctx,
     )
   }
@@ -142,7 +148,7 @@ pub mod marketplace_aas {
     _token_type: TokenType,
     amount: u64,
   ) -> Result<()> {    
-    process_buy_token::process_buy_token(
+    process_buy_token::process(
       ctx,
       amount,
     )

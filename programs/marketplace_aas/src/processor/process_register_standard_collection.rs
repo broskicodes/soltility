@@ -6,7 +6,7 @@ use {
   mpl_token_metadata::state::Metadata,
 };
 
-pub fn process_register_standard_collection(
+pub fn process(
   ctx: Context<RegisterStandardCollection>,
   version: CandyMachineVersion,
   name: String,

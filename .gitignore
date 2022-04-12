@@ -6,3 +6,4 @@ target
 node_modules
 tests/
 migrations/
+programs/p2p_trading/
