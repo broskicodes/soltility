@@ -4,7 +4,7 @@ use {
   crate::error::MarketplaceError,
 };
 
-pub fn process_initialize_master_vault(
+pub fn process(
   ctx: Context<InitializeMasterVault>,
   fee: u16,
 ) -> Result<()> {

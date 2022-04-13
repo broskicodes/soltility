@@ -1,6 +1,6 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::BuyNft,
+  crate::context::marketplace_context::BuyNft,
   crate::error::*,
   crate::utils::transfer_from_program_owned_account,
   solana_program::{
@@ -19,7 +19,7 @@ use {
   },
 };
 
-pub fn process_buy_nft<'a, 'b, 'c, 'info>(
+pub fn process<'a, 'b, 'c, 'info>(
   ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;

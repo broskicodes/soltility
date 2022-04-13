@@ -10,7 +10,7 @@ use {
   },
 };
 
-pub fn process_create_token_metadata(
+pub fn process(
   ctx: Context<CreateTokenMetadata>,
   name: String,
   symbol: String,
