@@ -3,7 +3,7 @@ use {
     prelude::*,
     AccountsClose,
   },
-  crate::context::BuyToken,
+  crate::context::marketplace_context::BuyToken,
   crate::error::*,
   crate::utils::transfer_from_program_owned_account,
   solana_program::{
@@ -22,7 +22,7 @@ use {
   },
 };
 
-pub fn process_buy_token<'a, 'b, 'c, 'info>(
+pub fn process<'a, 'b, 'c, 'info>(
   ctx: Context<'a, 'b, 'c, 'info, BuyToken<'info>>,
   amount: u64,
 ) -> Result<()> {

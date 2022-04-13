@@ -1,7 +1,8 @@
 [features]
 seeds = false
 [programs.devnet]
-bo_marketplace = "22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx"
+marketplace_aas = "22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx"
+p2p_trading = "EMihg7zqtS6aWKc6K4qRKsjAPJbfhnJpGLakjgb3xvvP"
 
 [registry]
 url = "https://anchor.projectserum.com"

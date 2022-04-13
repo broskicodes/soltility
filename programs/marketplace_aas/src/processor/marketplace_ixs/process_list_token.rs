@@ -1,6 +1,6 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::ListToken,
+  crate::context::marketplace_context::ListToken,
   crate::state::*,
   crate::error::*,
   solana_program::{
@@ -12,7 +12,7 @@ use {
   },
 };
 
-pub fn process_list_token(
+pub fn process(
   ctx: Context<ListToken>,
   token_type: TokenType,
   price_per_token: u64,

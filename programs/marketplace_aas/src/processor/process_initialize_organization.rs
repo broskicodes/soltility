@@ -4,7 +4,7 @@ use {
   crate::error::MarketplaceError,
 };
 
-pub fn process_initialize_organization(
+pub fn process(
   ctx: Context<InitializeOrganization>,
   name: String,
   custom_vault: Option<Pubkey>,

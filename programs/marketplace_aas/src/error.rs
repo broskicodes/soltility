@@ -29,3 +29,17 @@ pub enum MarketplaceError {
   #[msg("A bump required for instruction processing is missing.")]
   MissingBump,
 }
+
+#[error_code]
+pub enum TradeError {
+  #[msg("Provided escrow nonce does not match expected value.")]
+  MismatchedEscrowNonce,
+  #[msg("Passed remaining accounts array does not contain the expected accounts.")]
+  InvalidRemainingAccounts,
+  #[msg("Missing a required mint key in offering.")]
+  MissingOfferingMint,
+  #[msg("Signer key does not match the offerer stored in account.")]
+  InvalidOfferer,
+  #[msg("Signer key does not match the offeree stored in account.")]
+  InvalidOfferee,
+}

@@ -1,6 +1,6 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::ListNft,
+  crate::context::marketplace_context::ListNft,
   crate::state::*,
   crate::error::*,
   solana_program::{
@@ -12,7 +12,7 @@ use {
   },
 };
 
-pub fn process_list_nft(
+pub fn process(
   ctx: Context<ListNft>,
   token_type: TokenType,
   price: u64,

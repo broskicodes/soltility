@@ -1,11 +1,11 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::InitializeMarketplace,
+  crate::context::marketplace_context::InitializeMarketplace,
   crate::state::TokenType,
   crate::error::MarketplaceError,
 };
 
-pub fn process_initialize_marketplace(
+pub fn process(
   ctx: Context<InitializeMarketplace>,
   token_type: TokenType,
   fee: u16,

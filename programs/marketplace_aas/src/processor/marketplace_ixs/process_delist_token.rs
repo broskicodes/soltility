@@ -1,6 +1,6 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::DelistToken,
+  crate::context::marketplace_context::DelistToken,
   crate::error::*,
   solana_program::{
     program::invoke_signed,
@@ -11,7 +11,7 @@ use {
   },
 };
 
-pub fn process_delist_token(
+pub fn process(
   ctx: Context<DelistToken>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;

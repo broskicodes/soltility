@@ -14,6 +14,13 @@ pub enum TokenType {
   Fungible,
 }
 
+#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize)]
+pub struct TokenOffering {
+  pub amount: u64,
+  pub mint: Option<Pubkey>,
+  pub collection: Option<Pubkey>,
+}
+
 #[account]
 pub struct MasterVault {
   pub authority: Pubkey,
@@ -50,7 +57,7 @@ pub struct Collection {
 }
 
 #[account]
-pub struct Escrow {
+pub struct MarketEscrow {
   pub token_type: TokenType,
   pub marketplace: Pubkey,
   pub collection: Option<Pubkey>,
@@ -60,4 +67,22 @@ pub struct Escrow {
   pub token_account: Pubkey,
   pub price_per_token: u64,
   pub extra_space: [u8; 256],
+}
+
+#[account]
+pub struct TradeEscrow {
+  pub nonce: u64,
+  pub offerer: Pubkey,
+  pub tokens_offering: Vec<TokenOffering>,
+  pub tokens_requesting: Vec<TokenOffering>,
+  pub lamports_offering: Option<u64>,
+  pub lamports_requesting: Option<u64>,
+  pub offeree: Option<Pubkey>,
+}
+
+#[account]
+pub struct GlobalTradeState {
+  pub next_escrow_nonce: u64,
+  pub completed_trades: u64,
+  pub pending_offers: u64,
 }
