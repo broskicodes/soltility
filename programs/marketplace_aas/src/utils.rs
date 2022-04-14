@@ -2,6 +2,8 @@ use {
   anchor_lang::prelude::*,
 };
 
+pub const ONE_DAY: u64 = 60 * 60 * 24;
+
 pub fn transfer_from_program_owned_account(
   src: &mut AccountInfo,
   dst: &mut AccountInfo,

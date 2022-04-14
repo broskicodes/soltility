@@ -43,3 +43,11 @@ pub enum TradeError {
   #[msg("Signer key does not match the offeree stored in account.")]
   InvalidOfferee,
 }
+
+#[error_code]
+pub enum StakeError {
+  #[msg("Provided reward mint does nor match the mint on record.")]
+  IncorrectRewardMint,
+  #[msg("The locking period for this nft has not ended yet.")]
+  NftLocked,
+}
