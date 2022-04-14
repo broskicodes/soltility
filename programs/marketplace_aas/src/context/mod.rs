@@ -1,5 +1,6 @@
 pub mod marketplace_context;
 pub mod trading_context;
+pub mod staking_context;
 
 use {
   anchor_lang::prelude::*,

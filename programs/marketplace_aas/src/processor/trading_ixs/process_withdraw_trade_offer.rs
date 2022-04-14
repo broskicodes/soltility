@@ -126,5 +126,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     None => {},
   };
 
+  ctx.accounts.global_state.pending_offers -= 1;
+
   Ok(())
 }

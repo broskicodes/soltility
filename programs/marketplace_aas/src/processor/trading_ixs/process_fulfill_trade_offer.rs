@@ -271,5 +271,8 @@ pub fn process<'a, 'b, 'c, 'info>(
     None => {},
   };
 
+  ctx.accounts.global_state.pending_offers -= 1;
+  ctx.accounts.global_state.completed_trades += 1;
+
   Ok(())
 }

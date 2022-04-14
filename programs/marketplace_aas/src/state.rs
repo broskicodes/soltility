@@ -70,6 +70,13 @@ pub struct MarketEscrow {
 }
 
 #[account]
+pub struct GlobalTradeState {
+  pub next_escrow_nonce: u64,
+  pub completed_trades: u64,
+  pub pending_offers: u64,
+}
+
+#[account]
 pub struct TradeEscrow {
   pub nonce: u64,
   pub offerer: Pubkey,
@@ -81,8 +88,21 @@ pub struct TradeEscrow {
 }
 
 #[account]
-pub struct GlobalTradeState {
-  pub next_escrow_nonce: u64,
-  pub completed_trades: u64,
-  pub pending_offers: u64,
+pub struct StakeVault {
+  pub organization: Pubkey,
+  pub collection: Pubkey,
+  pub authority: Pubkey,
+  pub reward_mint: Pubkey,
+  pub min_lock_time: u32,
+  pub daily_rate: u8,
+}
+
+#[account]
+pub struct StakeEscrow {
+  pub stake_vault: Pubkey,
+  pub user: Pubkey,
+  pub nft_mint: Pubkey,
+  pub daily_rate: u8,
+  pub start_date: i64,
+  pub last_claimed_date: i64,
 }
