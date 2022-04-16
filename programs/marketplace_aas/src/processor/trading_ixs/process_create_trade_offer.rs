@@ -30,27 +30,27 @@ pub fn process<'a, 'b, 'c, 'info>(
   let offerer = &mut ctx.accounts.offerer;
 
   if escrow_nonce != ctx.accounts.global_state.next_escrow_nonce {
-    return Err(error!(TradeError::MismatchedEscrowNonce));
+    return Err(error!(CustomError::MismatchedEscrowNonce));
   }
 
   if ctx.remaining_accounts.len() % 3 != 0 {
-    return Err(error!(TradeError::InvalidRemainingAccounts));
+    return Err(error!(CustomError::InvalidRemainingAccounts));
   }
 
   let mut i = 0;
   for offering in tokens_offering.clone() {
-    let mint_info = ctx.remaining_accounts.get(i).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let offerer_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let escrow_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(TradeError::InvalidRemainingAccounts)?;
+    let mint_info = ctx.remaining_accounts.get(i).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let offerer_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let escrow_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(CustomError::InvalidRemainingAccounts)?;
 
-    if *mint_info.key != offering.mint.ok_or(TradeError::MissingOfferingMint)? {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+    if *mint_info.key != offering.mint.ok_or(CustomError::MissingOfferingMint)? {
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let offerer_token_account_data = TokenAccount::try_deserialize(&mut &offerer_token_account_info.try_borrow_data()?[..])?;
 
     if offerer_token_account_data.owner != *offerer.key || offerer_token_account_data.mint != *mint_info.key {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let (escrow_token_account, bump) = Pubkey::find_program_address(
@@ -63,7 +63,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     );
 
     if *escrow_token_account_info.key != escrow_token_account {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let create_ix = create_account(

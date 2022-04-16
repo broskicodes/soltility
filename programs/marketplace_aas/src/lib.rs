@@ -21,7 +21,7 @@ use {
   crate::state::*,
 };
 
-declare_id!("22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx");
+declare_id!("6KcWr37gcK8XpyErCL5zsTcrgepd7dAfykNcPrR9476h");
 
 #[program]
 pub mod marketplace_aas {
@@ -49,6 +49,30 @@ pub mod marketplace_aas {
     )
   }
 
+  pub fn register_standard_collection(
+    ctx: Context<RegisterStandardCollection>,
+    version: CandyMachineVersion,
+    name: String,
+  ) -> Result<()> {
+    process_register_standard_collection::process(
+      ctx,
+      version,
+      name,
+    )
+  }
+
+  // pub fn create_token_metadata(
+  //   ctx: Context<CreateTokenMetadata>,
+  //   name: String,
+  //   symbol: String,
+  // ) -> Result<()> {
+  //   process_create_token_metadata::process(
+  //     ctx,
+  //     name,
+  //     symbol,
+  //   )
+  // }
+
   pub fn initialize_marketplace(
     ctx: Context<InitializeMarketplace>,
     _org_name: String,
@@ -61,18 +85,6 @@ pub mod marketplace_aas {
       token_type,
       fee,
       is_mutable,
-    )
-  }
-
-  pub fn register_standard_collection(
-    ctx: Context<RegisterStandardCollection>,
-    version: CandyMachineVersion,
-    name: String,
-  ) -> Result<()> {
-    process_register_standard_collection::process(
-      ctx,
-      version,
-      name,
     )
   }
   
@@ -106,18 +118,6 @@ pub mod marketplace_aas {
   ) -> Result<()> {    
     process_buy_nft::process(
       ctx,
-    )
-  }
-
-  pub fn create_token_metadata(
-    ctx: Context<CreateTokenMetadata>,
-    name: String,
-    symbol: String,
-  ) -> Result<()> {
-    process_create_token_metadata::process(
-      ctx,
-      name,
-      symbol,
     )
   }
 

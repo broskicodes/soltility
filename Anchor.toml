@@ -1,8 +1,7 @@
 [features]
 seeds = false
 [programs.devnet]
-marketplace_aas = "22YCvsiJSir1Hb7ihcTvGGXg9uA84AfYjN6vsqphkuEx"
-p2p_trading = "EMihg7zqtS6aWKc6K4qRKsjAPJbfhnJpGLakjgb3xvvP"
+marketplace_aas = "6KcWr37gcK8XpyErCL5zsTcrgepd7dAfykNcPrR9476h"
 
 [registry]
 url = "https://anchor.projectserum.com"
@@ -12,4 +11,4 @@ cluster = "devnet"
 wallet = "/home/braeden/.config/solana/devnet.json"
 
 [scripts]
-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.test.ts"

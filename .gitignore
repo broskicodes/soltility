@@ -4,6 +4,7 @@
 target
 **/*.rs.bk
 node_modules
-tests/
+tests/utils
+tests/marketplace_aas.ts
 migrations/
-programs/p2p_trading/
+old-maas-keypair.json

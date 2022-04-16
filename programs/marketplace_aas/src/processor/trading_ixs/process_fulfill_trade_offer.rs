@@ -25,23 +25,23 @@ pub fn process<'a, 'b, 'c, 'info>(
   let escrow_account = &mut ctx.accounts.escrow_account;
   let offerer = &mut ctx.accounts.offerer;
   let offeree = &mut ctx.accounts.offeree;
-  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
   if *offerer.key != escrow_account.offerer {
-    return Err(error!(TradeError::InvalidOfferer));
+    return Err(error!(CustomError::InvalidOfferer));
   }
 
   match escrow_account.offeree {
     Some(key) => {
       if *offeree.key != key {
-        return Err(error!(TradeError::InvalidOfferee));
+        return Err(error!(CustomError::InvalidOfferee));
       }
     },
     None => {}
   };
 
   if ctx.remaining_accounts.len() % 3 != 0 {
-    return Err(error!(TradeError::InvalidRemainingAccounts));
+    return Err(error!(CustomError::InvalidRemainingAccounts));
   }
 
   let mut i = 0;
@@ -57,17 +57,17 @@ pub fn process<'a, 'b, 'c, 'info>(
     //   }
     // }
 
-    let mint_info = ctx.remaining_accounts.get(i).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let offeree_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let offerer_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(TradeError::InvalidRemainingAccounts)?;
+    let mint_info = ctx.remaining_accounts.get(i).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let offeree_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let offerer_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(CustomError::InvalidRemainingAccounts)?;
 
-    if *mint_info.key != request.mint.ok_or(TradeError::MissingOfferingMint)? {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+    if *mint_info.key != request.mint.ok_or(CustomError::MissingOfferingMint)? {
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let offeree_token_account_data = TokenAccount::try_deserialize(&mut &offeree_token_account_info.try_borrow_data()?[..])?;
     if offeree_token_account_data.owner != *offeree.key || offeree_token_account_data.mint != *mint_info.key {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let offerer_token_account_data = TokenAccount::try_deserialize(&mut &offerer_token_account_info.try_borrow_data()?[..]);
@@ -75,7 +75,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     match offerer_token_account_data {
       Ok(token_account) => {
         if token_account.owner != *offerer.key || token_account.mint != *mint_info.key {
-          return Err(error!(TradeError::InvalidRemainingAccounts));
+          return Err(error!(CustomError::InvalidRemainingAccounts));
         }
       },
       Err(_) => {
@@ -85,7 +85,7 @@ pub fn process<'a, 'b, 'c, 'info>(
         );
     
         if *offerer_token_account_info.key != offerer_token_account {
-          return Err(error!(TradeError::InvalidRemainingAccounts));
+          return Err(error!(CustomError::InvalidRemainingAccounts));
         }
     
         invoke(
@@ -146,12 +146,12 @@ pub fn process<'a, 'b, 'c, 'info>(
   };
 
   for offering in escrow_account.tokens_offering.clone() {
-    let mint_info = ctx.remaining_accounts.get(i).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let offeree_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let escrow_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(TradeError::InvalidRemainingAccounts)?;
+    let mint_info = ctx.remaining_accounts.get(i).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let offeree_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let escrow_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(CustomError::InvalidRemainingAccounts)?;
 
-    if *mint_info.key != offering.mint.ok_or(TradeError::MissingOfferingMint)? {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+    if *mint_info.key != offering.mint.ok_or(CustomError::MissingOfferingMint)? {
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let offeree_token_account_data = TokenAccount::try_deserialize(&mut &offeree_token_account_info.try_borrow_data()?[..]);
@@ -159,7 +159,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     match offeree_token_account_data {
       Ok(token_account) => {
         if token_account.owner != *offeree.key || token_account.mint != *mint_info.key {
-          return Err(error!(TradeError::InvalidRemainingAccounts));
+          return Err(error!(CustomError::InvalidRemainingAccounts));
         }
       },
       Err(_) => {
@@ -169,7 +169,7 @@ pub fn process<'a, 'b, 'c, 'info>(
         );
     
         if *offeree_token_account_info.key != offeree_token_account {
-          return Err(error!(TradeError::InvalidRemainingAccounts));
+          return Err(error!(CustomError::InvalidRemainingAccounts));
         }
     
         invoke(
@@ -201,7 +201,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     );
 
     if *escrow_token_account_info.key != escrow_token_account {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let transfer_ix = spl_token::instruction::transfer(

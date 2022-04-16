@@ -13,10 +13,10 @@ pub fn process(
   ctx: Context<UnstakeNft>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
-  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
   if ctx.accounts.clock.unix_timestamp - escrow_account.start_date < ctx.accounts.stake_vault.min_lock_time as i64 {
-    return Err(error!(StakeError::NftLocked));
+    return Err(error!(CustomError::NftLocked));
   }
 
   let transfer_ix = transfer(

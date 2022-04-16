@@ -11,10 +11,10 @@ pub fn process(
   ctx: Context<CollectEarnedTokens>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
-  let stake_vault_bump = *ctx.bumps.get("stake_vault").ok_or(MarketplaceError::MissingBump)?;
+  let stake_vault_bump = *ctx.bumps.get("stake_vault").ok_or(CustomError::MissingBump)?;
 
   if ctx.accounts.reward_mint.key() != ctx.accounts.stake_vault.reward_mint {
-    return Err(error!(StakeError::IncorrectRewardMint));
+    return Err(error!(CustomError::IncorrectRewardMint));
   }
 
   let mint_amount 
@@ -50,7 +50,9 @@ pub fn process(
     ]
   )?;
 
-  escrow_account.last_claimed_date = ctx.accounts.clock.unix_timestamp;
+  if mint_amount >= 1 {
+    escrow_account.last_claimed_date = ctx.accounts.clock.unix_timestamp;
+  }
 
   Ok(())
 }
