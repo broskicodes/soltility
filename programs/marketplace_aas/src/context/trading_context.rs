@@ -48,6 +48,7 @@ pub struct CreateTradeOffer<'info> {
   #[account(mut)]
   pub offerer: Signer<'info>,
   pub system_program: Program<'info, System>,
+  pub token_program: Program<'info, Token>,
   pub rent: Sysvar<'info, Rent>,
 }
 
@@ -76,6 +77,7 @@ pub struct WithdrawTradeOffer<'info> {
   pub global_state: Box<Account<'info, GlobalTradeState>>,
   #[account(mut)]
   pub offerer: Signer<'info>,
+  pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]

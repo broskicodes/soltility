@@ -32,6 +32,14 @@ pub enum CustomError {
   MissingBump,
   #[msg("Provided escrow nonce does not match expected value.")]
   MismatchedEscrowNonce,
+  #[msg("Too many tokens in either offerings or requestings array.")]
+  TooManyOfferings,
+  #[msg("Nothing to trade.")]
+  EmptyTrade,
+  #[msg("Cannot propose trade with yourself.")]
+  SelfTrade,
+  #[msg("Offerings list contains duplicate mint keys.")]
+  DuplicateMint,
   #[msg("Passed remaining accounts array does not contain the expected accounts.")]
   InvalidRemainingAccounts,
   #[msg("Missing a required mint key in offering.")]

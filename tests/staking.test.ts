@@ -740,15 +740,15 @@
 //       const tokAcntAmount = await provider.connection.getTokenAccountBalance(userNftTokenAccount);
 //       assert.equal(tokAcntAmount.value.uiAmount, 1);
 
-//       try {
-//         await program.account.stakeEscrow.fetch(escrow);
-//         assert.fail("Should have failed to fetch account data.");
-//       } catch (err) {
-//         assert.equal(err.message, `Account does not exist ${escrow.toString()}`)
-//       }
+      // try {
+      //   await program.account.stakeEscrow.fetch(escrow);
+      //   assert.fail("Should have failed to fetch account data.");
+      // } catch (err) {
+      //   assert.equal(err.message, `Account does not exist ${escrow.toString()}`)
+      // }
       
-//       const escrowTokAcntInfo = await provider.connection.getParsedAccountInfo(escrowToken);
-//       assert.equal(escrowTokAcntInfo.value, null);
+      // const escrowTokAcntInfo = await provider.connection.getParsedAccountInfo(escrowToken);
+      // assert.equal(escrowTokAcntInfo.value, null);
 
 //     } catch (err) {
 //       console.log(err);

@@ -26,7 +26,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     return Err(error!(CustomError::InvalidOfferer));
   }
 
-  if ctx.remaining_accounts.len() % 3 != 0 {
+  if ctx.remaining_accounts.len() != escrow_account.tokens_offering.len() * 3 {
     return Err(error!(CustomError::InvalidRemainingAccounts));
   }
 
@@ -73,7 +73,7 @@ pub fn process<'a, 'b, 'c, 'info>(
       &[
         offerer_token_account_info.clone(),
         escrow_token_account_info.clone(),
-        offerer.to_account_info(),
+        escrow_account.to_account_info(),
       ],
       &[
         &[
