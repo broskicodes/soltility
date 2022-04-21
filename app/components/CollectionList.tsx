@@ -1,8 +1,8 @@
 import { TEMP_ORG_NAME } from '@helpers/constants';
 import { createAndSendTx, getProvider } from '@helpers/mixins';
 import { EscrowAccountData } from '@helpers/types';
-import { BuyNft } from '@instructions/BuyNft';
-import { DelistNft } from '@instructions/DelistNft';
+import { BuyNft } from '@instructions/marketplace/BuyNft';
+import { DelistNft } from '@instructions/marketplace/DelistNft';
 import { Wallet } from '@project-serum/anchor';
 import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';

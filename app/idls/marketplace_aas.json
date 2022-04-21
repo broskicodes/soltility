@@ -1,0 +1,1690 @@
+{
+  "version": "0.1.0",
+  "name": "marketplace_aas",
+  "instructions": [
+    {
+      "name": "initializeMasterVault",
+      "accounts": [
+        {
+          "name": "masterVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "fee",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "initializeOrganization",
+      "accounts": [
+        {
+          "name": "organization",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "orgVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "customVault",
+          "type": {
+            "option": "publicKey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "registerStandardCollection",
+      "accounts": [
+        {
+          "name": "collection",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "version",
+          "type": {
+            "defined": "CandyMachineVersion"
+          }
+        },
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "initializeMarketplace",
+      "accounts": [
+        {
+          "name": "marketplace",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "orgAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "fee",
+          "type": "u16"
+        },
+        {
+          "name": "isMutable",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "listNft",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sellerNftTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "price",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "delistNft",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sellerNftTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        }
+      ]
+    },
+    {
+      "name": "buyNft",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "buyerNftTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "orgVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "masterVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        }
+      ]
+    },
+    {
+      "name": "listToken",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sellerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "pricePerToken",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "delistToken",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sellerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        }
+      ]
+    },
+    {
+      "name": "buyToken",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "buyerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketplace",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "orgVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "masterVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "tokenType",
+          "type": {
+            "defined": "TokenType"
+          }
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initializeGlobalTradeState",
+      "accounts": [
+        {
+          "name": "globalState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createTradeOffer",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "offerer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "escrowNonce",
+          "type": "u64"
+        },
+        {
+          "name": "tokensOffering",
+          "type": {
+            "vec": {
+              "defined": "TokenOffering"
+            }
+          }
+        },
+        {
+          "name": "tokensRequesting",
+          "type": {
+            "vec": {
+              "defined": "TokenOffering"
+            }
+          }
+        },
+        {
+          "name": "lamportsOffering",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "lamportsRequesting",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "offeree",
+          "type": {
+            "option": "publicKey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdrawTradeOffer",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "offerer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "escrowNonce",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "fulfillTradeOffer",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "offeree",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "offerer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "escrowNonce",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initializeStakingVault",
+      "accounts": [
+        {
+          "name": "stakeVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "orgAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rewardMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        },
+        {
+          "name": "minLockTime",
+          "type": "u32"
+        },
+        {
+          "name": "dailyRate",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "stakeNft",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakeVault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userNftTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "collectEarnedTokens",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userRewardTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakeVault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "unstakeNft",
+      "accounts": [
+        {
+          "name": "escrowAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakeVault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "organization",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "collection",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userNftTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "orgName",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "MasterVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "fee",
+            "type": "u16"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Organization",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "customVault",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Marketplace",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenType",
+            "type": {
+              "defined": "TokenType"
+            }
+          },
+          {
+            "name": "organization",
+            "type": "publicKey"
+          },
+          {
+            "name": "updateAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "fee",
+            "type": "u16"
+          },
+          {
+            "name": "isMutable",
+            "type": "bool"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Collection",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": {
+              "defined": "CandyMachineVersion"
+            }
+          },
+          {
+            "name": "collectionId",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MarketEscrow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenType",
+            "type": {
+              "defined": "TokenType"
+            }
+          },
+          {
+            "name": "marketplace",
+            "type": "publicKey"
+          },
+          {
+            "name": "collection",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "metadata",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "seller",
+            "type": "publicKey"
+          },
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "tokenAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "pricePerToken",
+            "type": "u64"
+          },
+          {
+            "name": "extraSpace",
+            "type": {
+              "array": [
+                "u8",
+                256
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalTradeState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nextEscrowNonce",
+            "type": "u64"
+          },
+          {
+            "name": "completedTrades",
+            "type": "u64"
+          },
+          {
+            "name": "pendingOffers",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradeEscrow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "offerer",
+            "type": "publicKey"
+          },
+          {
+            "name": "tokensOffering",
+            "type": {
+              "vec": {
+                "defined": "TokenOffering"
+              }
+            }
+          },
+          {
+            "name": "tokensRequesting",
+            "type": {
+              "vec": {
+                "defined": "TokenOffering"
+              }
+            }
+          },
+          {
+            "name": "lamportsOffering",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "lamportsRequesting",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "offeree",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakeVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "organization",
+            "type": "publicKey"
+          },
+          {
+            "name": "collection",
+            "type": "publicKey"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "rewardMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "minLockTime",
+            "type": "u32"
+          },
+          {
+            "name": "dailyRate",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakeEscrow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stakeVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "nftMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "dailyRate",
+            "type": "u8"
+          },
+          {
+            "name": "startDate",
+            "type": "i64"
+          },
+          {
+            "name": "lastClaimedDate",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "TokenOffering",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "mint",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "collection",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "CandyMachineVersion",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "V1"
+          },
+          {
+            "name": "V2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "NonFungible"
+          },
+          {
+            "name": "Fungible"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NftListed",
+      "msg": "Nft already listed. Must delist first to update listing."
+    },
+    {
+      "code": 6001,
+      "name": "NftUnlisted",
+      "msg": "Nft not listed."
+    },
+    {
+      "code": 6002,
+      "name": "MismatchedNft",
+      "msg": "Nft is not part of the passed collection."
+    },
+    {
+      "code": 6003,
+      "name": "UnknownSeller",
+      "msg": "Person attempting to delist is not the one who originally listed."
+    },
+    {
+      "code": 6004,
+      "name": "InvalidCollectionId",
+      "msg": "Passed collection id does not match one obtained from passed mint."
+    },
+    {
+      "code": 6005,
+      "name": "CollectionIdUnverified",
+      "msg": "Passed collection id is not verified."
+    },
+    {
+      "code": 6006,
+      "name": "BadCreatorInfo",
+      "msg": "Passed Creator AccountInfo is missing or incorrect."
+    },
+    {
+      "code": 6007,
+      "name": "InvalidFee",
+      "msg": "Invalid fee, must be in basis points."
+    },
+    {
+      "code": 6008,
+      "name": "WrongMarketplace",
+      "msg": "Attempting to list token/nft on incorrect marketplace."
+    },
+    {
+      "code": 6009,
+      "name": "MissingAccountInfo",
+      "msg": "Missing required account info to execute instruction."
+    },
+    {
+      "code": 6010,
+      "name": "InvalidAccountInfo",
+      "msg": "Passed vault account info does not match key argument passed to instruction."
+    },
+    {
+      "code": 6011,
+      "name": "IncorrectOrgAuthority",
+      "msg": "Signing organization authority does not match authority on record."
+    },
+    {
+      "code": 6012,
+      "name": "MissingBump",
+      "msg": "A bump required for instruction processing is missing."
+    },
+    {
+      "code": 6013,
+      "name": "MismatchedEscrowNonce",
+      "msg": "Provided escrow nonce does not match expected value."
+    },
+    {
+      "code": 6014,
+      "name": "TooManyOfferings",
+      "msg": "Too many tokens in either offerings or requestings array."
+    },
+    {
+      "code": 6015,
+      "name": "EmptyTrade",
+      "msg": "Nothing to trade."
+    },
+    {
+      "code": 6016,
+      "name": "SelfTrade",
+      "msg": "Cannot propose trade with yourself."
+    },
+    {
+      "code": 6017,
+      "name": "DuplicateMint",
+      "msg": "Offerings list contains duplicate mint keys."
+    },
+    {
+      "code": 6018,
+      "name": "InvalidRemainingAccounts",
+      "msg": "Passed remaining accounts array does not contain the expected accounts."
+    },
+    {
+      "code": 6019,
+      "name": "MissingOfferingMint",
+      "msg": "Missing a required mint key in offering."
+    },
+    {
+      "code": 6020,
+      "name": "InvalidOfferer",
+      "msg": "Signer key does not match the offerer stored in account."
+    },
+    {
+      "code": 6021,
+      "name": "InvalidOfferee",
+      "msg": "Signer key does not match the offeree stored in account."
+    },
+    {
+      "code": 6022,
+      "name": "IncorrectRewardMint",
+      "msg": "Provided reward mint does not match the mint on record."
+    },
+    {
+      "code": 6023,
+      "name": "NftLocked",
+      "msg": "The locking period for this nft has not ended yet."
+    },
+    {
+      "code": 6024,
+      "name": "InvalidCurrentMintAuth",
+      "msg": "Mint authority of provided reward mint cannot be transferred. Either it is null or current authority has not signed."
+    },
+    {
+      "code": 6025,
+      "name": "TokenAccountEmpty",
+      "msg": "Provided token account is empty."
+    }
+  ],
+  "metadata": {
+    "address": "6KcWr37gcK8XpyErCL5zsTcrgepd7dAfykNcPrR9476h"
+  }
+}

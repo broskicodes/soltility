@@ -1,5 +1,5 @@
 import { getProgram } from "@helpers/mixins";
-import { Provider, BN } from "@project-serum/anchor";
+import { Provider } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { Keypair } from "@solana/web3.js";
 import { TOKEN_METADATA_PROGRAM_ADDRESS } from "@helpers/constants";

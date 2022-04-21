@@ -1,8 +1,8 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
 import { 
   getCollectionPDA, 
-  getEscrowPDA, 
-  getEscrowTokenPDA, 
+  getMarketEscrowPDA, 
+  getMarketEscrowTokenPDA, 
   getMarketplacePDA, 
   getOrganizationPDA
 } from "@helpers/pdas";
@@ -23,6 +23,17 @@ export const ListNft = async (
   const { publicKey } = provider.wallet;
 
   const collection = await getCollectionPDA(collectionId);
+  const organization = await getOrganizationPDA(orgName);
+  const marketplace = await getMarketplacePDA(
+    organization, 
+    TokenType.NonFungible
+  );
+  const escrowAccount = await getMarketEscrowPDA(
+    marketplace,
+    collection,
+    mint,
+    publicKey,
+  );
 
   const ix = await program.methods
     .listNft(
@@ -31,25 +42,15 @@ export const ListNft = async (
       new BN(price * LAMPORTS_PER_SOL),
     )
     .accounts({
-      organization: await getOrganizationPDA(orgName),
-      marketplace: await getMarketplacePDA(orgName, TokenType.NonFungible),
+      organization,
+      marketplace,
       collectionId: collectionId,
       collection: collection,
       nftMint: mint,
       nftMetadataAccount: await Metadata.getPDA(mint),
-      escrowAccount: await getEscrowPDA(
-        orgName,
-        TokenType.NonFungible,
-        collection,
-        mint,
-        publicKey,
-      ),
-      escrowTokenAccount: await getEscrowTokenPDA(
-        orgName,
-        TokenType.NonFungible,
-        collection,
-        mint,
-        publicKey,
+      escrowAccount,
+      escrowTokenAccount: await getMarketEscrowTokenPDA(
+        escrowAccount
       ),
       sellerNftTokenAccount: await Token.getAssociatedTokenAddress(
         ASSOCIATED_TOKEN_PROGRAM_ID,

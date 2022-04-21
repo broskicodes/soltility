@@ -57,3 +57,9 @@ export interface EscrowAccountData {
   tokenAccount: PublicKey,
   pricePerToken: number,
 }
+
+export interface TokenOffering {
+  amount: BN,
+  mint?: PublicKey,
+  collection?: PublicKey,
+}

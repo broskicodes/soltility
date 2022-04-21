@@ -13,6 +13,12 @@ export const InitilizeMarketplace = async (
   const program = getProgram(provider);
   const { publicKey } = provider.wallet;
 
+  const organization = await getOrganizationPDA(orgName);
+  const marketplace = await getMarketplacePDA(
+    organization, 
+    TokenType.NonFungible
+  );
+
   const ix = await program.methods
     .initializeMarketplace(
       orgName,
@@ -21,8 +27,8 @@ export const InitilizeMarketplace = async (
       isMutable,
     )
     .accounts({
-      marketplace: await getMarketplacePDA(orgName, type),
-      organization: await getOrganizationPDA(orgName),
+      marketplace,
+      organization,
       orgAuthority: publicKey,
       updateAuthority: publicKey,
     })

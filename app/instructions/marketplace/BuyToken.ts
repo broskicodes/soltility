@@ -1,7 +1,7 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
 import { 
-  getEscrowPDA, 
-  getEscrowTokenPDA, 
+  getMarketEscrowPDA, 
+  getMarketEscrowTokenPDA, 
   getMarketplacePDA, 
   getMasterVaultPDA, 
   getOrganizationPDA,
@@ -25,6 +25,18 @@ export const BuyToken = async (
   const metadata = await Metadata.getPDA(mint);
   const decimals = ((await provider.connection.getParsedAccountInfo(mint)).value?.data as ParsedAccountData).parsed.info.decimals;
 
+  const organization = await getOrganizationPDA(orgName);
+  const marketplace = await getMarketplacePDA(
+    organization, 
+    TokenType.NonFungible
+  );
+  const escrowAccount = await getMarketEscrowPDA(
+    marketplace,
+    metadata,
+    mint,
+    seller,
+  );
+
   const ix = await program.methods
     .buyToken(
       orgName,
@@ -32,24 +44,14 @@ export const BuyToken = async (
       new BN(amount * Math.pow(10, decimals)),
     )
     .accounts({
-      organization: await getOrganizationPDA(orgName),
-      orgVault: await getOrganizationVaultPDA(orgName),
-      marketplace: await getMarketplacePDA(orgName, TokenType.Fungible),
+      organization,
+      orgVault: await getOrganizationVaultPDA(organization),
+      marketplace,
       tokenMint: mint,
       metadataAccount: metadata,
-      escrowAccount: await getEscrowPDA(
-        orgName,
-        TokenType.Fungible,
-        metadata,
-        mint,
-        seller,
-      ),
-      escrowTokenAccount: await getEscrowTokenPDA(
-        orgName,
-        TokenType.Fungible,
-        metadata,
-        mint,
-        seller,
+      escrowAccount,
+      escrowTokenAccount: await getMarketEscrowTokenPDA(
+        escrowAccount
       ),
       buyerTokenAccount: await Token.getAssociatedTokenAddress(
         ASSOCIATED_TOKEN_PROGRAM_ID,

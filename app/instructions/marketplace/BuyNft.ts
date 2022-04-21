@@ -1,15 +1,15 @@
 import { getProgram, tokenTypeEnumToAnchorEnum } from "@helpers/mixins";
 import { 
   getCollectionPDA, 
-  getEscrowPDA, 
-  getEscrowTokenPDA, 
+  getMarketEscrowPDA, 
+  getMarketEscrowTokenPDA, 
   getMarketplacePDA, 
   getMasterVaultPDA, 
   getOrganizationPDA,
   getOrganizationVaultPDA
 } from "@helpers/pdas";
 import { TokenType } from "@helpers/types";
-import { Provider, BN } from "@project-serum/anchor";
+import { Provider } from "@project-serum/anchor";
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey } from "@solana/web3.js";
@@ -41,32 +41,34 @@ export const BuyNft = async (
       })
     : [];
 
+  const organization = await getOrganizationPDA(orgName);
+  const marketplace = await getMarketplacePDA(
+    organization, 
+    TokenType.NonFungible
+  );
+  const escrowAccount = await getMarketEscrowPDA(
+    marketplace,
+    collection,
+    mint,
+    seller,
+  );
+
   const ix = await program.methods
     .buyNft(
       orgName,
       tokenTypeEnumToAnchorEnum(TokenType.NonFungible),
     )
     .accounts({
-      organization: await getOrganizationPDA(orgName),
-      orgVault: await getOrganizationVaultPDA(orgName),
-      marketplace: await getMarketplacePDA(orgName, TokenType.NonFungible),
+      organization,
+      orgVault: await getOrganizationVaultPDA(organization),
+      marketplace,
       collectionId: collectionId,
       collection: collection,
       nftMint: mint,
       nftMetadataAccount: mtdtAcnt,
-      escrowAccount: await getEscrowPDA(
-        orgName,
-        TokenType.NonFungible,
-        collection,
-        mint,
-        seller,
-      ),
-      escrowTokenAccount: await getEscrowTokenPDA(
-        orgName,
-        TokenType.NonFungible,
-        collection,
-        mint,
-        seller,
+      escrowAccount,
+      escrowTokenAccount: await getMarketEscrowTokenPDA(
+        escrowAccount,
       ),
       buyerNftTokenAccount: await Token.getAssociatedTokenAddress(
         ASSOCIATED_TOKEN_PROGRAM_ID,

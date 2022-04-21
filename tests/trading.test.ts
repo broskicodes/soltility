@@ -15,14 +15,14 @@ describe("Trading unit test", () => {
   const { publicKey } = provider.wallet;
   // it('Initializes global trade state', async () => {
   //   try {
-  //     const globalState = await getTradeStatePDA(program.programId);
+      // const globalState = await getTradeStatePDA(program.programId);
 
-  //     await program.methods
-  //       .initializeGlobalTradeState()
-  //       .accounts({
-  //         globalState,
-  //       })
-  //       .rpc()
+      // await program.methods
+      //   .initializeGlobalTradeState()
+      //   .accounts({
+      //     globalState,
+      //   })
+      //   .rpc()
 
   //   } catch(err) {
   //     console.log(err);

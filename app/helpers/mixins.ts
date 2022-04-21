@@ -5,6 +5,7 @@ import {
   setProvider, 
   Wallet 
 } from "@project-serum/anchor";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { 
   Connection, 
   Keypair, 
@@ -12,9 +13,10 @@ import {
   Transaction, 
   TransactionInstruction 
 } from "@solana/web3.js";
-import idl from '../idls/bo_marketplace.json';
+import idl from '../idls/marketplace_aas.json';
 import { MARKETPLACE_PROGRAM_ADDRESS } from "./constants";
-import { CandyMachineVersion, TokenType } from "./types";
+import { getTradeEscrowTokenPDA } from "./pdas";
+import { CandyMachineVersion, TokenOffering, TokenType } from "./types";
 
 export const getProgram = (
   provider?: Provider,
@@ -107,4 +109,85 @@ export const anchorTokenTypeToEnum = (versionObj: Object) => {
     default:
       return TokenType.Other;
   }
+}
+
+export const getOfferingRemainingAccounts = async (
+  tokensOffering: TokenOffering[],
+  user: PublicKey,
+  escrow: PublicKey,
+) => {
+  const remainingAccounts = (await Promise.all(tokensOffering.map(async (offering) => {
+    if(!offering.mint){
+      throw new Error("Offering requires a mint");
+    }
+
+    return [
+      {
+        pubkey: offering.mint,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: await Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          offering.mint,
+          user,
+          false
+        ),
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: await getTradeEscrowTokenPDA(
+          escrow,
+          offering.mint
+        ),
+        isSigner: false,
+        isWritable: true,
+      }
+    ];
+  }))).flat();
+
+  return remainingAccounts;
+}
+
+export const getRequestingRemainingAccounts = async (
+  mints: PublicKey[],
+  offerer: PublicKey,
+  offeree: PublicKey,
+) => {
+  const remainingAccounts = (await Promise.all(mints.map(async (mint) => {
+    return [
+      {
+        pubkey: mint,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: await Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          mint,
+          offeree,
+          false
+        ),
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: await Token.getAssociatedTokenAddress(
+          ASSOCIATED_TOKEN_PROGRAM_ID,
+          TOKEN_PROGRAM_ID,
+          mint,
+          offerer,
+          false
+        ),
+        isSigner: false,
+        isWritable: true,
+      },
+    ];
+  }))).flat();
+
+  return remainingAccounts;
 }

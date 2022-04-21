@@ -30,3 +30,19 @@ export const getTradeEscrowPDA = async (
 
   return escrow;
 }
+
+export const getTradeEscrowTokenPDA = async (
+  escrow: PublicKey,
+  mint: PublicKey,
+) => {
+  const [escrowToken] = await PublicKey.findProgramAddress(
+    [
+      Buffer.from("token-account"),
+      escrow.toBuffer(),
+      mint.toBuffer(),
+    ],
+    MARKETPLACE_PROGRAM_ADDRESS,
+  );
+
+  return escrowToken;
+}

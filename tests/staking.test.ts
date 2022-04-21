@@ -188,35 +188,35 @@
 
 //   it('Initializes stake vault', async () => {
 //     try {
-//       const name = "Name";
-//       const organization = await getOrganizationPDA(program.programId, name);
-//       const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
-//       const collection = await getCollectionPDA(
-//         program.programId,
-//         collectionId
-//       );
-//       const stakeVault = await getStakeVaultPDA(
-//         program.programId,
-//         organization,
-//         collection
-//       );
+      // const name = "Name";
+      // const organization = await getOrganizationPDA(program.programId, name);
+      // const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
+      // const collection = await getCollectionPDA(
+      //   program.programId,
+      //   collectionId
+      // );
+      // const stakeVault = await getStakeVaultPDA(
+      //   program.programId,
+      //   organization,
+      //   collection
+      // );
       
-//       const rewardMint = new PublicKey("JLH6X6GUoBj9D3MYqoptAwPZT6yZtSyMHV28aMd2GQj");
+      // const rewardMint = new PublicKey("JLH6X6GUoBj9D3MYqoptAwPZT6yZtSyMHV28aMd2GQj");
 
-//       await program.methods
-//         .initializeStakingVault(
-//           name,
-//           3000,
-//           10,
-//         )
-//         .accounts({
-//           stakeVault,
-//           collection,
-//           collectionId,
-//           organization,
-//           rewardMint: rewardMint,
-//         })
-//         .rpc()
+      // await program.methods
+      //   .initializeStakingVault(
+      //     name,
+      //     3000,
+      //     10,
+      //   )
+      //   .accounts({
+      //     stakeVault,
+      //     collection,
+      //     collectionId,
+      //     organization,
+      //     rewardMint: rewardMint,
+      //   })
+      //   .rpc()
 
 //       const data = await program.account.stakeVault.fetch(stakeVault);
 
@@ -416,53 +416,53 @@
 
 //   it('Stakes nft', async () => {
 //     try {
-//       const name = "Name";
-//       const organization = await getOrganizationPDA(program.programId, name);
-//       const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
-//       const nftMint = new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA");
-//       const collection = await getCollectionPDA(
-//         program.programId,
-//         collectionId
-//       );
-//       const stakeVault = await getStakeVaultPDA(
-//         program.programId,
-//         organization,
-//         collection
-//       );
-//       const escrow = await getStakeEscrowPDA(
-//         program.programId,
-//         stakeVault,
-//         publicKey,
-//         nftMint,
-//       );
-//       const escrowToken = await getStakeEscrowTokenPDA(
-//         program.programId,
-//         escrow,
-//       );
+      // const name = "Name";
+      // const organization = await getOrganizationPDA(program.programId, name);
+      // const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
+      // const nftMint = new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA");
+      // const collection = await getCollectionPDA(
+      //   program.programId,
+      //   collectionId
+      // );
+      // const stakeVault = await getStakeVaultPDA(
+      //   program.programId,
+      //   organization,
+      //   collection
+      // );
+      // const escrow = await getStakeEscrowPDA(
+      //   program.programId,
+      //   stakeVault,
+      //   publicKey,
+      //   nftMint,
+      // );
+      // const escrowToken = await getStakeEscrowTokenPDA(
+      //   program.programId,
+      //   escrow,
+      // );
 
-//       await program.methods
-//         .stakeNft(
-//           name,
-//         )
-//         .accounts({
-//           escrowAccount: escrow,
-//           escrowTokenAccount: escrowToken,
-//           stakeVault,
-//           collection,
-//           collectionId,
-//           organization,
-//           nftMint,
-//           nftMetadataAccount: await Metadata.getPDA(nftMint),
-//           userNftTokenAccount: await Token.getAssociatedTokenAddress(
-//             ASSOCIATED_TOKEN_PROGRAM_ID,
-//             TOKEN_PROGRAM_ID,
-//             nftMint,
-//             publicKey,
-//             false
-//           ),
-//           clock: SYSVAR_CLOCK_PUBKEY,
-//         })
-//         .rpc()
+      // await program.methods
+      //   .stakeNft(
+      //     name,
+      //   )
+      //   .accounts({
+      //     escrowAccount: escrow,
+      //     escrowTokenAccount: escrowToken,
+      //     stakeVault,
+      //     collection,
+      //     collectionId,
+      //     organization,
+      //     nftMint,
+      //     nftMetadataAccount: await Metadata.getPDA(nftMint),
+      //     userNftTokenAccount: await Token.getAssociatedTokenAddress(
+      //       ASSOCIATED_TOKEN_PROGRAM_ID,
+      //       TOKEN_PROGRAM_ID,
+      //       nftMint,
+      //       publicKey,
+      //       false
+      //     ),
+      //     clock: SYSVAR_CLOCK_PUBKEY,
+      //   })
+      //   .rpc()
 
 //       const data = await program.account.stakeEscrow.fetch(escrow);
 //       const dailyRate = (await program.account.stakeVault.fetch(stakeVault)).dailyRate;
@@ -539,59 +539,59 @@
 
 //   it('Collects earned reward tokens', async () => {
 //     try {
-//       const name = "Name";
-//       const organization = await getOrganizationPDA(program.programId, name);
-//       const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
-//       const nftMint = new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA");
-//       const collection = await getCollectionPDA(
-//         program.programId,
-//         collectionId
-//       );
-//       const stakeVault = await getStakeVaultPDA(
-//         program.programId,
-//         organization,
-//         collection
-//       );
-//       const escrow = await getStakeEscrowPDA(
-//         program.programId,
-//         stakeVault,
-//         publicKey,
-//         nftMint,
-//       );
-//       const rewardMint = new PublicKey("JLH6X6GUoBj9D3MYqoptAwPZT6yZtSyMHV28aMd2GQj");
+      // const name = "Name";
+      // const organization = await getOrganizationPDA(program.programId, name);
+      // const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
+      // const nftMint = new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA");
+      // const collection = await getCollectionPDA(
+      //   program.programId,
+      //   collectionId
+      // );
+      // const stakeVault = await getStakeVaultPDA(
+      //   program.programId,
+      //   organization,
+      //   collection
+      // );
+      // const escrow = await getStakeEscrowPDA(
+      //   program.programId,
+      //   stakeVault,
+      //   publicKey,
+      //   nftMint,
+      // );
+      // const rewardMint = new PublicKey("JLH6X6GUoBj9D3MYqoptAwPZT6yZtSyMHV28aMd2GQj");
 
-//       const userRewardTokenAccount = await Token.getAssociatedTokenAddress(
-//         ASSOCIATED_TOKEN_PROGRAM_ID,
-//         TOKEN_PROGRAM_ID,
-//         rewardMint,
-//         publicKey,
-//         false
-//       );
+      // const userRewardTokenAccount = await Token.getAssociatedTokenAddress(
+      //   ASSOCIATED_TOKEN_PROGRAM_ID,
+      //   TOKEN_PROGRAM_ID,
+      //   rewardMint,
+      //   publicKey,
+      //   false
+      // );
 
-//       let data = await program.account.stakeEscrow.fetch(escrow);
+      // let data = await program.account.stakeEscrow.fetch(escrow);
 
-//       const beforeAmnt = (await provider.connection.getTokenAccountBalance(userRewardTokenAccount)).value.uiAmount;
-//       let mint_amount 
-//         = (((Date.now() / 1000) - data.lastClaimedDate.toNumber())
-//         / (60 * 60 * 24)
-//         * data.dailyRate);
+      // const beforeAmnt = (await provider.connection.getTokenAccountBalance(userRewardTokenAccount)).value.uiAmount;
+      // let mint_amount 
+      //   = (((Date.now() / 1000) - data.lastClaimedDate.toNumber())
+      //   / (60 * 60 * 24)
+      //   * data.dailyRate);
       
-//       await program.methods
-//         .collectEarnedTokens(
-//           name,
-//         )
-//         .accounts({
-//           escrowAccount: escrow,
-//           rewardMint,
-//           stakeVault,
-//           collection,
-//           collectionId,
-//           organization,
-//           nftMint,
-//           userRewardTokenAccount,
-//           clock: SYSVAR_CLOCK_PUBKEY,
-//         })
-//         .rpc()
+      // await program.methods
+      //   .collectEarnedTokens(
+      //     name,
+      //   )
+      //   .accounts({
+      //     escrowAccount: escrow,
+      //     rewardMint,
+      //     stakeVault,
+      //     collection,
+      //     collectionId,
+      //     organization,
+      //     nftMint,
+      //     userRewardTokenAccount,
+      //     clock: SYSVAR_CLOCK_PUBKEY,
+      //   })
+      //   .rpc()
 
 //       data = await program.account.stakeEscrow.fetch(escrow);
 
@@ -689,53 +689,53 @@
 
 //   it('Unstakes nft', async () => {
 //     try {
-//       const name = "Name";
-//       const organization = await getOrganizationPDA(program.programId, name);
-//       const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
-//       const nftMint = new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA");
-//       const collection = await getCollectionPDA(
-//         program.programId,
-//         collectionId
-//       );
-//       const stakeVault = await getStakeVaultPDA(
-//         program.programId,
-//         organization,
-//         collection
-//       );
-//       const escrow = await getStakeEscrowPDA(
-//         program.programId,
-//         stakeVault,
-//         publicKey,
-//         nftMint,
-//       );
-//       const escrowToken = await getStakeEscrowTokenPDA(
-//         program.programId,
-//         escrow,
-//       );
-//       const userNftTokenAccount = await Token.getAssociatedTokenAddress(
-//         ASSOCIATED_TOKEN_PROGRAM_ID,
-//         TOKEN_PROGRAM_ID,
-//         nftMint,
-//         publicKey,
-//         false
-//       );
+      // const name = "Name";
+      // const organization = await getOrganizationPDA(program.programId, name);
+      // const collectionId = new PublicKey('Dfn6BJyWp71hVxVjh28RrejgiFkqix6n7zqn3XwvC9Kc');
+      // const nftMint = new PublicKey("G8VFfsD27RgHpMfKNVeuuayc7VCQDiQTKRsdxm3ZMwyA");
+      // const collection = await getCollectionPDA(
+      //   program.programId,
+      //   collectionId
+      // );
+      // const stakeVault = await getStakeVaultPDA(
+      //   program.programId,
+      //   organization,
+      //   collection
+      // );
+      // const escrow = await getStakeEscrowPDA(
+      //   program.programId,
+      //   stakeVault,
+      //   publicKey,
+      //   nftMint,
+      // );
+      // const escrowToken = await getStakeEscrowTokenPDA(
+      //   program.programId,
+      //   escrow,
+      // );
+      // const userNftTokenAccount = await Token.getAssociatedTokenAddress(
+      //   ASSOCIATED_TOKEN_PROGRAM_ID,
+      //   TOKEN_PROGRAM_ID,
+      //   nftMint,
+      //   publicKey,
+      //   false
+      // );
 
-//       await program.methods
-//         .unstakeNft(
-//           name,
-//         )
-//         .accounts({
-//           escrowAccount: escrow,
-//           escrowTokenAccount: escrowToken,
-//           stakeVault,
-//           collection,
-//           collectionId,
-//           organization,
-//           nftMint,
-//           userNftTokenAccount,
-//           clock: SYSVAR_CLOCK_PUBKEY,
-//         })
-//         .rpc()
+      // await program.methods
+      //   .unstakeNft(
+      //     name,
+      //   )
+      //   .accounts({
+      //     escrowAccount: escrow,
+      //     escrowTokenAccount: escrowToken,
+      //     stakeVault,
+      //     collection,
+      //     collectionId,
+      //     organization,
+      //     nftMint,
+      //     userNftTokenAccount,
+      //     clock: SYSVAR_CLOCK_PUBKEY,
+      //   })
+      //   .rpc()
 
 //       const tokAcntAmount = await provider.connection.getTokenAccountBalance(userNftTokenAccount);
 //       assert.equal(tokAcntAmount.value.uiAmount, 1);

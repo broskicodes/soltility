@@ -10,14 +10,16 @@ export const InitilizeOrganization = async (
 ) => {
   const program = getProgram(provider);
 
+  const organization = await getOrganizationPDA(orgName);
+
   const ix = await program.methods
     .initializeOrganization(
       orgName,
       customVaultAddress ? customVaultAddress : null,
     )
     .accounts({
-      organization: await getOrganizationPDA(orgName),
-      orgVault: await getOrganizationVaultPDA(orgName),
+      organization,
+      orgVault: await getOrganizationVaultPDA(organization),
       authority: provider.wallet.publicKey,
     })
     .instruction();
