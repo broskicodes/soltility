@@ -8,15 +8,15 @@ use {
       TokenAccount,
       Token,
     },
-    // associated_token::AssociatedToken,
   },
+  mpl_token_metadata::ID as TOKEN_METADATA_PROGRAM_ID,
 };
 
 #[derive(Accounts)]
 #[instruction(org_name: String)]
 pub struct InitializeStakingVault<'info> {
   #[account(
-    init, payer = authority, space = 8+32+32+32+32+4,
+    init, payer = authority, space = 8+32+32+32+32+4+1,
     seeds = [
       b"stake-vault".as_ref(),
       organization.key().as_ref(),
@@ -24,7 +24,7 @@ pub struct InitializeStakingVault<'info> {
     ],
     bump,
   )]
-  pub stake_vault: Account<'info, StakeVault>,
+  pub stake_vault: Box<Account<'info, StakeVault>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -42,12 +42,14 @@ pub struct InitializeStakingVault<'info> {
     bump,
   )]
   pub collection: Box<Account<'info, Collection>>,
-  pub reward_mint: Account<'info, Mint>,
+  #[account(mut)]
+  pub reward_mint: Box<Account<'info, Mint>>,
   /// CHECK: Candy Machine ID or Collection ID
   pub collection_id: UncheckedAccount<'info>,
   #[account(mut)]
   pub authority: Signer<'info>,
   pub system_program: Program<'info, System>,
+  pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -63,7 +65,7 @@ pub struct StakeNft<'info> {
     ],
     bump,
   )]
-  pub escrow_account: Account<'info, StakeEscrow>,
+  pub escrow_account: Box<Account<'info, StakeEscrow>>,
   #[account(
     init, payer = user,
     token::mint = nft_mint,
@@ -74,7 +76,7 @@ pub struct StakeNft<'info> {
     ],
     bump,
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"stake-vault".as_ref(),
@@ -83,7 +85,7 @@ pub struct StakeNft<'info> {
     ],
     bump,
   )]
-  pub stake_vault: Account<'info, StakeVault>,
+  pub stake_vault: Box<Account<'info, StakeVault>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -100,14 +102,14 @@ pub struct StakeNft<'info> {
     bump,
   )]
   pub collection: Box<Account<'info, Collection>>,
-  pub nft_mint: Account<'info, Mint>,
+  pub nft_mint: Box<Account<'info, Mint>>,
   #[account(
     seeds = [
       b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
+      TOKEN_METADATA_PROGRAM_ID.as_ref(),
       nft_mint.key().as_ref(),
     ],
-    seeds::program = mpl_token_metadata::ID,
+    seeds::program = TOKEN_METADATA_PROGRAM_ID,
     bump,
   )]
   /// CHECK: Metaplex Metadata state account
@@ -117,7 +119,7 @@ pub struct StakeNft<'info> {
     associated_token::mint = nft_mint,
     associated_token::authority = user,
   )]
-  pub user_nft_token_account: Account<'info, TokenAccount>,
+  pub user_nft_token_account: Box<Account<'info, TokenAccount>>,
   #[account(mut)]
   pub user: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
@@ -141,14 +143,15 @@ pub struct CollectEarnedTokens<'info> {
     ],
     bump,
   )]
-  pub escrow_account: Account<'info, StakeEscrow>,
-  pub reward_mint: Account<'info, Mint>,
+  pub escrow_account: Box<Account<'info, StakeEscrow>>,
+  #[account(mut)]
+  pub reward_mint: Box<Account<'info, Mint>>,
   #[account(
     init_if_needed, payer = user,
     associated_token::mint = reward_mint,
     associated_token::authority = user,
   )]
-  pub user_reward_token_account: Account<'info, TokenAccount>,
+  pub user_reward_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"stake-vault".as_ref(),
@@ -157,7 +160,7 @@ pub struct CollectEarnedTokens<'info> {
     ],
     bump,
   )]
-  pub stake_vault: Account<'info, StakeVault>,
+  pub stake_vault: Box<Account<'info, StakeVault>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -174,7 +177,7 @@ pub struct CollectEarnedTokens<'info> {
     bump,
   )]
   pub collection: Box<Account<'info, Collection>>,
-  pub nft_mint: Account<'info, Mint>,
+  pub nft_mint: Box<Account<'info, Mint>>,
   #[account(mut)]
   pub user: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID
@@ -200,7 +203,7 @@ pub struct UnstakeNft<'info> {
     bump,
     close = user,
   )]
-  pub escrow_account: Account<'info, StakeEscrow>,
+  pub escrow_account: Box<Account<'info, StakeEscrow>>,
   #[account(
     mut,
     seeds = [
@@ -209,7 +212,7 @@ pub struct UnstakeNft<'info> {
     ],
     bump,
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"stake-vault".as_ref(),
@@ -218,7 +221,7 @@ pub struct UnstakeNft<'info> {
     ],
     bump,
   )]
-  pub stake_vault: Account<'info, StakeVault>,
+  pub stake_vault: Box<Account<'info, StakeVault>>,
   #[account(
     seeds = [
       b"organization".as_ref(),
@@ -235,13 +238,13 @@ pub struct UnstakeNft<'info> {
     bump,
   )]
   pub collection: Box<Account<'info, Collection>>,
-  pub nft_mint: Account<'info, Mint>,
+  pub nft_mint: Box<Account<'info, Mint>>,
   #[account(
     mut,
     associated_token::mint = nft_mint,
     associated_token::authority = user,
   )]
-  pub user_nft_token_account: Account<'info, TokenAccount>,
+  pub user_nft_token_account: Box<Account<'info, TokenAccount>>,
   #[account(mut)]
   pub user: Signer<'info>,
   /// CHECK: Candy Machine ID or Collection ID

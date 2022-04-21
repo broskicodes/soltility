@@ -1,7 +1,7 @@
 use {
   anchor_lang::prelude::*,
   crate::context::InitializeOrganization,
-  crate::error::MarketplaceError,
+  crate::error::CustomError,
 };
 
 pub fn process(
@@ -13,10 +13,10 @@ pub fn process(
 
   match custom_vault {
     Some(key) => {
-      let vault = ctx.remaining_accounts.get(0).ok_or(MarketplaceError::MissingAccountInfo)?.clone();
+      let vault = ctx.remaining_accounts.get(0).ok_or(CustomError::MissingAccountInfo)?.clone();
 
       if key != *vault.key {
-        return Err(error!(MarketplaceError::InvalidAccountInfo));
+        return Err(error!(CustomError::InvalidAccountInfo));
       }
 
       if !vault.is_signer {

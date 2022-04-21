@@ -20,10 +20,14 @@ pub fn process(
   let stake_vault = &mut ctx.accounts.stake_vault;
 
   if ctx.accounts.organization.authority != *ctx.accounts.org_authority.key {
-    return Err(error!(MarketplaceError::IncorrectOrgAuthority));
+    return Err(error!(CustomError::IncorrectOrgAuthority));
   }
 
-  // if ctx.accounts.collection.
+  let reward_mint_auth = ctx.accounts.reward_mint.mint_authority.ok_or(CustomError::InvalidCurrentMintAuth)?;
+
+  if reward_mint_auth != *ctx.accounts.authority.key {
+    return Err(error!(CustomError::InvalidCurrentMintAuth));
+  }
 
   let auth_ix = set_authority(
     &TOKEN_PROGRAM_ID,
@@ -37,6 +41,7 @@ pub fn process(
   invoke(
     &auth_ix,
     &[
+      ctx.accounts.token_program.to_account_info(),
       ctx.accounts.reward_mint.to_account_info(),
       ctx.accounts.authority.to_account_info(),
       stake_vault.to_account_info(),
@@ -51,4 +56,5 @@ pub fn process(
   stake_vault.daily_rate = daily_rate;
   
   Ok(())
+  // Err(error!(CustomError::InvalidCurrentMintAuth))
 }
