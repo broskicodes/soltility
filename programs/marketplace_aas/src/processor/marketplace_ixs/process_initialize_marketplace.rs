@@ -2,7 +2,7 @@ use {
   anchor_lang::prelude::*,
   crate::context::marketplace_context::InitializeMarketplace,
   crate::state::TokenType,
-  crate::error::MarketplaceError,
+  crate::error::CustomError,
 };
 
 pub fn process(
@@ -14,11 +14,11 @@ pub fn process(
   let marketplace = &mut ctx.accounts.marketplace;
 
   if fee > 10000 {
-    return Err(error!(MarketplaceError::InvalidFee));
+    return Err(error!(CustomError::InvalidFee));
   }
 
   if *ctx.accounts.org_authority.key != ctx.accounts.organization.authority {
-    return Err(error!(MarketplaceError::IncorrectOrgAuthority))
+    return Err(error!(CustomError::IncorrectOrgAuthority))
   }
 
   marketplace.fee = fee;

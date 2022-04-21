@@ -20,30 +20,30 @@ pub fn process<'a, 'b, 'c, 'info>(
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
   let offerer = &mut ctx.accounts.offerer;
-  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
   if *offerer.key != escrow_account.offerer {
-    return Err(error!(TradeError::InvalidOfferer));
+    return Err(error!(CustomError::InvalidOfferer));
   }
 
-  if ctx.remaining_accounts.len() % 3 != 0 {
-    return Err(error!(TradeError::InvalidRemainingAccounts));
+  if ctx.remaining_accounts.len() != escrow_account.tokens_offering.len() * 3 {
+    return Err(error!(CustomError::InvalidRemainingAccounts));
   }
 
   let mut i = 0;
   for offering in escrow_account.tokens_offering.clone() {
-    let mint_info = ctx.remaining_accounts.get(i).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let offerer_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(TradeError::InvalidRemainingAccounts)?;
-    let escrow_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(TradeError::InvalidRemainingAccounts)?;
+    let mint_info = ctx.remaining_accounts.get(i).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let offerer_token_account_info = ctx.remaining_accounts.get(i+1).ok_or(CustomError::InvalidRemainingAccounts)?;
+    let escrow_token_account_info = ctx.remaining_accounts.get(i+2).ok_or(CustomError::InvalidRemainingAccounts)?;
 
-    if *mint_info.key != offering.mint.ok_or(TradeError::MissingOfferingMint)? {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+    if *mint_info.key != offering.mint.ok_or(CustomError::MissingOfferingMint)? {
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let offerer_token_account_data = TokenAccount::try_deserialize(&mut &offerer_token_account_info.try_borrow_data()?[..])?;
 
     if offerer_token_account_data.owner != *offerer.key || offerer_token_account_data.mint != *mint_info.key {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let (escrow_token_account, _bump) = Pubkey::find_program_address(
@@ -56,7 +56,7 @@ pub fn process<'a, 'b, 'c, 'info>(
     );
 
     if *escrow_token_account_info.key != escrow_token_account {
-      return Err(error!(TradeError::InvalidRemainingAccounts));
+      return Err(error!(CustomError::InvalidRemainingAccounts));
     }
 
     let transfer_ix = spl_token::instruction::transfer(
@@ -73,7 +73,7 @@ pub fn process<'a, 'b, 'c, 'info>(
       &[
         offerer_token_account_info.clone(),
         escrow_token_account_info.clone(),
-        offerer.to_account_info(),
+        escrow_account.to_account_info(),
       ],
       &[
         &[
@@ -125,6 +125,8 @@ pub fn process<'a, 'b, 'c, 'info>(
     },
     None => {},
   };
+
+  ctx.accounts.global_state.pending_offers -= 1;
 
   Ok(())
 }

@@ -3,11 +3,8 @@ use {
   crate::state::*,
   anchor_spl::{
     token::{
-      // Mint, 
-      // TokenAccount,
       Token,
     },
-    // associated_token::AssociatedToken,
   },
 };
 
@@ -20,7 +17,7 @@ pub struct InitializeGlobalTradeState<'info> {
     ],
     bump,
   )]
-  pub global_state: Account<'info, GlobalTradeState>,
+  pub global_state: Box<Account<'info, GlobalTradeState>>,
   #[account(mut)]
   pub payer: Signer<'info>,
   pub system_program: Program<'info, System>,
@@ -39,7 +36,7 @@ pub struct CreateTradeOffer<'info> {
     ],
     bump,
   )]
-  pub escrow_account: Account<'info, TradeEscrow>,
+  pub escrow_account: Box<Account<'info, TradeEscrow>>,
   #[account(
     mut,
     seeds = [
@@ -47,10 +44,11 @@ pub struct CreateTradeOffer<'info> {
     ],
     bump,
   )]
-  pub global_state: Account<'info, GlobalTradeState>,
+  pub global_state: Box<Account<'info, GlobalTradeState>>,
   #[account(mut)]
   pub offerer: Signer<'info>,
   pub system_program: Program<'info, System>,
+  pub token_program: Program<'info, Token>,
   pub rent: Sysvar<'info, Rent>,
 }
 
@@ -68,7 +66,7 @@ pub struct WithdrawTradeOffer<'info> {
     bump,
     close = offerer,
   )]
-  pub escrow_account: Account<'info, TradeEscrow>,
+  pub escrow_account: Box<Account<'info, TradeEscrow>>,
   #[account(
     mut,
     seeds = [
@@ -76,9 +74,10 @@ pub struct WithdrawTradeOffer<'info> {
     ],
     bump,
   )]
-  pub global_state: Account<'info, GlobalTradeState>,
+  pub global_state: Box<Account<'info, GlobalTradeState>>,
   #[account(mut)]
   pub offerer: Signer<'info>,
+  pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
@@ -95,7 +94,7 @@ pub struct FulfillTradeOffer<'info> {
     bump,
     close = offerer,
   )]
-  pub escrow_account: Account<'info, TradeEscrow>,
+  pub escrow_account: Box<Account<'info, TradeEscrow>>,
   #[account(
     mut,
     seeds = [
@@ -103,7 +102,7 @@ pub struct FulfillTradeOffer<'info> {
     ],
     bump,
   )]
-  pub global_state: Account<'info, GlobalTradeState>,
+  pub global_state: Box<Account<'info, GlobalTradeState>>,
   #[account(mut)]
   pub offeree: Signer<'info>,
   #[account(mut)]

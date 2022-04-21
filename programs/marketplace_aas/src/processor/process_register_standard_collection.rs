@@ -19,23 +19,23 @@ pub fn process(
 
   let passed_collection_key = match version {
     CandyMachineVersion::V1 => {
-      let candy_machine = &(metadata.data.creators.ok_or(MarketplaceError::InvalidCollectionId)?)[0];
+      let candy_machine = &(metadata.data.creators.ok_or(CustomError::InvalidCollectionId)?)[0];
       if !candy_machine.verified {
-        return Err(error!(MarketplaceError::InvalidCollectionId));
+        return Err(error!(CustomError::CollectionIdUnverified));
       }
       candy_machine.address
     },
     CandyMachineVersion::V2 => {
-      let collection_data = metadata.collection.ok_or(MarketplaceError::InvalidCollectionId)?;
+      let collection_data = metadata.collection.ok_or(CustomError::InvalidCollectionId)?;
       if !collection_data.verified{
-        return Err(error!(MarketplaceError::InvalidCollectionId));
+        return Err(error!(CustomError::CollectionIdUnverified));
       }
       collection_data.key
     }
   };
 
   if collection_id.key() != passed_collection_key {
-    return Err(error!(MarketplaceError::InvalidCollectionId));
+    return Err(error!(CustomError::InvalidCollectionId));
   }
       
   collection.version = version;

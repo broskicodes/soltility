@@ -28,7 +28,7 @@ pub fn process(
 
   match token_type {
     TokenType::Fungible => Ok(()),
-    _ => Err(error!(MarketplaceError::WrongMarketplace))
+    _ => Err(error!(CustomError::WrongMarketplace))
   }?;
 
   let ix = transfer(

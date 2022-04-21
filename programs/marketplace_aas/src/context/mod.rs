@@ -1,5 +1,6 @@
 pub mod marketplace_context;
 pub mod trading_context;
+pub mod staking_context;
 
 use {
   anchor_lang::prelude::*,
@@ -7,7 +8,7 @@ use {
   anchor_spl::{
     token::{
       Mint, 
-      Token,
+      // Token,
     },
   },
 };
@@ -86,34 +87,34 @@ pub struct RegisterStandardCollection<'info> {
   pub system_program: Program<'info, System>,
 }
 
-#[derive(Accounts)]
-pub struct CreateTokenMetadata<'info> {
-  #[account(
-    seeds = [
-      b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
-      mint.key().as_ref(),
-    ],
-    seeds::program = mpl_token_metadata::ID,
-    bump,
-  )]
-  #[account(mut)]
-  /// CHECK: Metaplex Metadata state account
-  pub metadata_account: UncheckedAccount<'info>,
-  #[account(
-    init_if_needed, payer = payer,
-    mint::authority = mint_authority,
-    mint::decimals = 6,
-  )]
-  pub mint: Account<'info, Mint>,
-  pub mint_authority: Signer<'info>,
-  pub update_authority: Signer<'info>,
-  #[account(mut)]
-  pub payer: Signer<'info>,
-  pub rent: Sysvar<'info, Rent>,
-  pub system_program: Program<'info, System>,
-  pub token_program: Program<'info, Token>,
-  #[account(address = mpl_token_metadata::ID)]
-  /// CHECK: Token Metadata Program
-  pub token_metadata_program: UncheckedAccount<'info>
-}
+// #[derive(Accounts)]
+// pub struct CreateTokenMetadata<'info> {
+//   #[account(
+//     mut,
+//     seeds = [
+//       b"metadata".as_ref(),  
+//       mpl_token_metadata::ID.as_ref(),
+//       mint.key().as_ref(),
+//     ],
+//     seeds::program = mpl_token_metadata::ID,
+//     bump,
+//   )]
+//   /// CHECK: Metaplex Metadata state account
+//   pub metadata_account: UncheckedAccount<'info>,
+//   // #[account(
+//   //   init_if_needed, payer = payer,
+//   //   mint::authority = mint_authority,
+//   //   mint::decimals = 6,
+//   // )]
+//   pub mint: Account<'info, Mint>,
+//   pub mint_authority: Signer<'info>,
+//   pub update_authority: Signer<'info>,
+//   #[account(mut)]
+//   pub payer: Signer<'info>,
+//   pub rent: Sysvar<'info, Rent>,
+//   pub system_program: Program<'info, System>,
+//   pub token_program: Program<'info, Token>,
+//   #[account(address = mpl_token_metadata::ID)]
+//   /// CHECK: Token Metadata Program
+//   pub token_metadata_program: UncheckedAccount<'info>
+// }

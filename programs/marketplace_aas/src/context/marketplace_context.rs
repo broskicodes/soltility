@@ -9,6 +9,7 @@ use {
     },
     associated_token::AssociatedToken,
   },
+  mpl_token_metadata::ID as TOKEN_METADATA_PROGRAM_ID,
 };
 
 #[derive(Accounts)]
@@ -22,7 +23,7 @@ pub struct InitializeMarketplace<'info> {
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type.clone() as u8],
+      (token_type.clone() as u8).to_le_bytes().as_ref(),
     ],
     bump,
   )]
@@ -51,7 +52,7 @@ pub struct ListNft<'info> {
   #[account(
     init_if_needed, payer = seller, space = 8+1+32+(4+32)+32+32+32+8+256, 
     seeds = [
-      b"escrow".as_ref(),
+      b"market-escrow".as_ref(),
       marketplace.key().as_ref(),
       collection.key().as_ref(),
       nft_mint.key().as_ref(),
@@ -70,15 +71,15 @@ pub struct ListNft<'info> {
     ],
     bump,
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
-  pub nft_mint: Account<'info, Mint>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
+  pub nft_mint: Box<Account<'info, Mint>>,
   #[account(
     seeds = [
       b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
+      TOKEN_METADATA_PROGRAM_ID.as_ref(),
       nft_mint.key().as_ref(),
     ],
-    seeds::program = mpl_token_metadata::ID,
+    seeds::program = TOKEN_METADATA_PROGRAM_ID,
     bump,
   )]
   /// CHECK: Metaplex Metadata state account
@@ -88,7 +89,7 @@ pub struct ListNft<'info> {
     associated_token::mint = nft_mint,
     associated_token::authority = seller,
   )]
-  pub seller_nft_token_account: Account<'info, TokenAccount>,
+  pub seller_nft_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"collection".as_ref(),
@@ -101,7 +102,7 @@ pub struct ListNft<'info> {
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type as u8],
+      (token_type as u8).to_le_bytes().as_ref(),
     ],
     bump
   )]
@@ -133,7 +134,7 @@ pub struct DelistNft<'info> {
   #[account(
     mut,
     seeds = [
-      b"escrow".as_ref(),
+      b"market-escrow".as_ref(),
       marketplace.key().as_ref(),
       collection.key().as_ref(),
       nft_mint.key().as_ref(),
@@ -151,14 +152,14 @@ pub struct DelistNft<'info> {
     ],
     bump,
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
-  pub nft_mint: Account<'info, Mint>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
+  pub nft_mint: Box<Account<'info, Mint>>,
   #[account(
     mut,
     associated_token::mint = nft_mint,
     associated_token::authority = seller,
   )]
-  pub seller_nft_token_account: Account<'info, TokenAccount>,
+  pub seller_nft_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"collection".as_ref(),
@@ -171,7 +172,7 @@ pub struct DelistNft<'info> {
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type as u8],
+      (token_type as u8).to_le_bytes().as_ref(),
     ],
     bump,
   )]
@@ -201,7 +202,7 @@ pub struct BuyNft<'info> {
   #[account(
     mut,
     seeds = [
-      b"escrow".as_ref(),
+      b"market-escrow".as_ref(),
       marketplace.key().as_ref(),
       collection.key().as_ref(),
       nft_mint.key().as_ref(),
@@ -220,7 +221,7 @@ pub struct BuyNft<'info> {
     bump,
   )]
   pub escrow_token_account: Box<Account<'info, TokenAccount>>,
-  pub nft_mint: Account<'info, Mint>,
+  pub nft_mint: Box<Account<'info, Mint>>,
   #[account(
     init_if_needed, payer = buyer,
     associated_token::mint = nft_mint,
@@ -230,10 +231,10 @@ pub struct BuyNft<'info> {
   #[account(
     seeds = [
       b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
+      TOKEN_METADATA_PROGRAM_ID.as_ref(),
       nft_mint.key().as_ref(),
     ],
-    seeds::program = mpl_token_metadata::ID,
+    seeds::program = TOKEN_METADATA_PROGRAM_ID,
     bump,
   )]
   /// CHECK: Metaplex Metadata state account
@@ -250,7 +251,7 @@ pub struct BuyNft<'info> {
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type as u8],
+      (token_type as u8).to_le_bytes().as_ref(),
     ],
     bump
   )]
@@ -303,7 +304,7 @@ pub struct ListToken<'info> {
   #[account(
     init, payer = seller, space = 8+1+32+(4+32)+32+32+32+8+256, 
     seeds = [
-      b"escrow".as_ref(),
+      b"market-escrow".as_ref(),
       marketplace.key().as_ref(),
       metadata_account.key().as_ref(),
       token_mint.key().as_ref(),
@@ -322,15 +323,15 @@ pub struct ListToken<'info> {
     ],
     bump
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
-  pub token_mint: Account<'info, Mint>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
+  pub token_mint: Box<Account<'info, Mint>>,
   #[account(
     seeds = [
       b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
+      TOKEN_METADATA_PROGRAM_ID.as_ref(),
       token_mint.key().as_ref(),
     ],
-    seeds::program = mpl_token_metadata::ID,
+    seeds::program = TOKEN_METADATA_PROGRAM_ID,
     bump,
   )]
   /// CHECK: Metaplex Metadata state account
@@ -340,12 +341,12 @@ pub struct ListToken<'info> {
     associated_token::mint = token_mint,
     associated_token::authority = seller,
   )]
-  pub seller_token_account: Account<'info, TokenAccount>,
+  pub seller_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type as u8],
+      (token_type as u8).to_le_bytes().as_ref(),
     ],
     bump
   )]
@@ -375,7 +376,7 @@ pub struct DelistToken<'info> {
   #[account(
     mut,
     seeds = [
-      b"escrow".as_ref(),
+      b"market-escrow".as_ref(),
       marketplace.key().as_ref(),
       metadata_account.key().as_ref(),
       token_mint.key().as_ref(),
@@ -393,15 +394,15 @@ pub struct DelistToken<'info> {
     ],
     bump
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
-  pub token_mint: Account<'info, Mint>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
+  pub token_mint: Box<Account<'info, Mint>>,
   #[account(
     seeds = [
       b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
+      TOKEN_METADATA_PROGRAM_ID.as_ref(),
       token_mint.key().as_ref(),
     ],
-    seeds::program = mpl_token_metadata::ID,
+    seeds::program = TOKEN_METADATA_PROGRAM_ID,
     bump,
   )]
   /// CHECK: Metaplex Metadata state account
@@ -411,12 +412,12 @@ pub struct DelistToken<'info> {
     associated_token::mint = token_mint,
     associated_token::authority = seller,
   )]
-  pub seller_token_account: Account<'info, TokenAccount>,
+  pub seller_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type as u8],
+      (token_type as u8).to_le_bytes().as_ref(),
     ],
     bump
   )]
@@ -446,7 +447,7 @@ pub struct BuyToken<'info> {
   #[account(
     mut,
     seeds = [
-      b"escrow".as_ref(),
+      b"market-escrow".as_ref(),
       marketplace.key().as_ref(),
       metadata_account.key().as_ref(),
       token_mint.key().as_ref(),
@@ -464,15 +465,15 @@ pub struct BuyToken<'info> {
     ],
     bump
   )]
-  pub escrow_token_account: Account<'info, TokenAccount>,
-  pub token_mint: Account<'info, Mint>,
+  pub escrow_token_account: Box<Account<'info, TokenAccount>>,
+  pub token_mint: Box<Account<'info, Mint>>,
   #[account(
     seeds = [
       b"metadata".as_ref(),  
-      mpl_token_metadata::ID.as_ref(),
+      TOKEN_METADATA_PROGRAM_ID.as_ref(),
       token_mint.key().as_ref(),
     ],
-    seeds::program = mpl_token_metadata::ID,
+    seeds::program = TOKEN_METADATA_PROGRAM_ID,
     bump,
   )]
   /// CHECK: Metaplex Metadata state account
@@ -482,12 +483,12 @@ pub struct BuyToken<'info> {
     associated_token::mint = token_mint,
     associated_token::authority = buyer,
   )]
-  pub buyer_token_account: Account<'info, TokenAccount>,
+  pub buyer_token_account: Box<Account<'info, TokenAccount>>,
   #[account(
     seeds = [
       b"marketplace".as_ref(),
       organization.key().as_ref(),
-      &[token_type as u8],
+      (token_type as u8).to_le_bytes().as_ref(),
     ],
     bump
   )]

@@ -15,10 +15,10 @@ pub fn process(
   ctx: Context<DelistToken>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
-  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
   if escrow_account.seller != *ctx.accounts.seller.key {
-    return Err(error!(MarketplaceError::UnknownSeller));
+    return Err(error!(CustomError::UnknownSeller));
   }
 
   let transfer_ix = transfer(

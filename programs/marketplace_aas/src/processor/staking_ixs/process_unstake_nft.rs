@@ -1,31 +1,29 @@
 use {
   anchor_lang::prelude::*,
-  crate::context::marketplace_context::DelistNft,
+  crate::context::staking_context::UnstakeNft,
   crate::error::*,
-  solana_program::{
-    program::invoke_signed,
-  },
   spl_token::instruction::{
     transfer,
     close_account,
   },
+  solana_program::program::invoke_signed,
 };
 
 pub fn process(
-  ctx: Context<DelistNft>,
+  ctx: Context<UnstakeNft>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
   let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
-  if escrow_account.seller != *ctx.accounts.seller.key {
-    return Err(error!(CustomError::UnknownSeller));
+  if ctx.accounts.clock.unix_timestamp - escrow_account.start_date < ctx.accounts.stake_vault.min_lock_time as i64 {
+    return Err(error!(CustomError::NftLocked));
   }
 
   let transfer_ix = transfer(
     ctx.accounts.token_program.key,
     &ctx.accounts.escrow_token_account.key(),
-    &ctx.accounts.seller_nft_token_account.key(),
-    &ctx.accounts.escrow_account.key(),
+    &ctx.accounts.user_nft_token_account.key(),
+    &escrow_account.key(),
     &[],
     1,
   )?;
@@ -33,17 +31,16 @@ pub fn process(
   invoke_signed(
     &transfer_ix,
     &[
-      ctx.accounts.escrow_account.to_account_info(),
+      escrow_account.to_account_info(),
       ctx.accounts.escrow_token_account.to_account_info(),
-      ctx.accounts.seller_nft_token_account.to_account_info(),
+      ctx.accounts.user_nft_token_account.to_account_info(),
     ],
     &[
       &[
-        b"escrow".as_ref(),
-        ctx.accounts.marketplace.key().as_ref(),
-        ctx.accounts.collection.key().as_ref(),
+        b"stake-escrow".as_ref(),
+        ctx.accounts.stake_vault.key().as_ref(),
+        ctx.accounts.user.key.as_ref(),
         ctx.accounts.nft_mint.key().as_ref(),
-        ctx.accounts.seller.key().as_ref(),
         &[escrow_bump],
       ],
     ],
@@ -52,7 +49,7 @@ pub fn process(
   let close_ix = close_account(
     ctx.accounts.token_program.key,
     &ctx.accounts.escrow_token_account.key(),
-    &ctx.accounts.seller.key(),
+    ctx.accounts.user.key,
     &ctx.accounts.escrow_account.key(),
     &[],
   )?;
@@ -62,15 +59,14 @@ pub fn process(
     &[
       ctx.accounts.escrow_account.to_account_info(),
       ctx.accounts.escrow_token_account.to_account_info(),
-      ctx.accounts.seller.to_account_info(),
+      ctx.accounts.user.to_account_info(),
     ],
     &[
       &[
-        b"escrow".as_ref(),
-        ctx.accounts.marketplace.key().as_ref(),
-        ctx.accounts.collection.key().as_ref(),
+        b"stake-escrow".as_ref(),
+        ctx.accounts.stake_vault.key().as_ref(),
+        ctx.accounts.user.key.as_ref(),
         ctx.accounts.nft_mint.key().as_ref(),
-        ctx.accounts.seller.key().as_ref(),
         &[escrow_bump],
       ],
     ],

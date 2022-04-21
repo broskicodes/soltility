@@ -24,28 +24,28 @@ pub fn process(
 
   match token_type {
     TokenType::NonFungible => Ok(()),
-    _ => Err(error!(MarketplaceError::WrongMarketplace))
+    _ => Err(error!(CustomError::WrongMarketplace))
   }?;
 
   let nft_collection_address = match collection.version {
     CandyMachineVersion::V1 => {
-      let candy_machine = &(metadata.data.creators.ok_or(MarketplaceError::InvalidCollectionId)?)[0];
+      let candy_machine = &(metadata.data.creators.ok_or(CustomError::InvalidCollectionId)?)[0];
       if !candy_machine.verified {
-        return Err(error!(MarketplaceError::MismatchedNft));
+        return Err(error!(CustomError::MismatchedNft));
       }
       candy_machine.address
     },
     CandyMachineVersion::V2 => {
-      let collection = metadata.collection.ok_or(MarketplaceError::InvalidCollectionId)?;
+      let collection = metadata.collection.ok_or(CustomError::InvalidCollectionId)?;
       if !collection.verified {
-        return Err(error!(MarketplaceError::MismatchedNft));
+        return Err(error!(CustomError::MismatchedNft));
       }
       collection.key
     }
   };
 
   if collection.collection_id != nft_collection_address {
-    return Err(error!(MarketplaceError::MismatchedNft));
+    return Err(error!(CustomError::MismatchedNft));
   }
 
   let ix = transfer(

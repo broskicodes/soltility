@@ -27,10 +27,10 @@ pub fn process<'a, 'b, 'c, 'info>(
   amount: u64,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
-  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
   if escrow_account.seller != *ctx.accounts.seller.key {
-    return Err(error!(MarketplaceError::UnknownSeller));
+    return Err(error!(CustomError::UnknownSeller));
   }
 
   let total_price = escrow_account.price_per_token * (amount / 10u64.pow(ctx.accounts.token_mint.decimals as u32));
@@ -55,10 +55,10 @@ pub fn process<'a, 'b, 'c, 'info>(
 
   let mut org_vault_info = match ctx.accounts.organization.custom_vault {
     Some(key) => {
-      let vault = ctx.remaining_accounts.get(0).ok_or(MarketplaceError::MissingAccountInfo)?.clone();
+      let vault = ctx.remaining_accounts.get(0).ok_or(CustomError::MissingAccountInfo)?.clone();
 
       if key != *vault.key {
-        return Err(error!(MarketplaceError::InvalidAccountInfo));
+        return Err(error!(CustomError::InvalidAccountInfo));
       }
 
       vault

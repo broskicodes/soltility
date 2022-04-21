@@ -23,10 +23,10 @@ pub fn process<'a, 'b, 'c, 'info>(
   ctx: Context<'a, 'b, 'c, 'info, BuyNft<'info>>,
 ) -> Result<()> {
   let escrow_account = &mut ctx.accounts.escrow_account;
-  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(MarketplaceError::MissingBump)?;
+  let escrow_bump = *ctx.bumps.get("escrow_account").ok_or(CustomError::MissingBump)?;
 
   if escrow_account.seller != *ctx.accounts.seller.key {
-    return Err(error!(MarketplaceError::UnknownSeller));
+    return Err(error!(CustomError::UnknownSeller));
   }
 
   let buyer_pay_ix = solana_program::system_instruction::transfer(
@@ -59,11 +59,11 @@ pub fn process<'a, 'b, 'c, 'info>(
       Some(creators) => {
         for creator in creators.iter() {
           if creator.share > 0 {
-            let to_account = (ctx.remaining_accounts.get(i).ok_or(error!(MarketplaceError::BadCreatorInfo))?).clone();
+            let to_account = (ctx.remaining_accounts.get(i).ok_or(error!(CustomError::BadCreatorInfo))?).clone();
             creator_infos.push(to_account);
 
             if creator.address != *creator_infos[i].key {
-              return Err(error!(MarketplaceError::BadCreatorInfo));
+              return Err(error!(CustomError::BadCreatorInfo));
             }
 
             transfer_from_program_owned_account(
@@ -82,10 +82,10 @@ pub fn process<'a, 'b, 'c, 'info>(
 
   let mut org_vault_info = match ctx.accounts.organization.custom_vault {
     Some(key) => {
-      let vault = ctx.remaining_accounts.get(i).ok_or(MarketplaceError::MissingAccountInfo)?.clone();
+      let vault = ctx.remaining_accounts.get(i).ok_or(CustomError::MissingAccountInfo)?.clone();
 
       if key != *vault.key {
-        return Err(error!(MarketplaceError::InvalidAccountInfo));
+        return Err(error!(CustomError::InvalidAccountInfo));
       }
 
       vault
