@@ -218,7 +218,7 @@ pub fn process<'a, 'b, 'c, 'info>(
       &[
         offeree_token_account_info.clone(),
         escrow_token_account_info.clone(),
-        offerer.to_account_info(),
+        escrow_account.to_account_info(),
       ],
       &[
         &[
