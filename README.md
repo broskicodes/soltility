@@ -1,3 +1,5 @@
+## On Hiatus!! Checkout [Candy Shop](https://github.com/LIQNFT/candy-shop) by [LIQNFT](https://candy.liqnft.com/) instead
+
 ## **Soltility**
 ### Introduction
 A suite of tools for Solana NFT projects, organizations and DAOs to use in their communities to extract more value for their NFTs. The goal of this project is to provide customizable, open source solutions that work out of the box for common tools that each NFT project typically has to build itself. This repo will aim to provide solutions to things like staking, marketplace creation, auctions, asset trading etc. All of this will be open to anyone who wishes to use them to easily easily integrate them within their own NFT project. This will allow these projects to focus on building the things that truly make them unique, rather than spending time re-inventing the wheel just to keep up with other projects in the space.
